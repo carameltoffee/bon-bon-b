@@ -18,6 +18,7 @@ export const loadUser = (): AppThunk => async (dispatch) => {
      const user = JSON.parse(userJSON) as IUser;
      if (isJwtExpired(token)) {
           dispatch(logout());
+          return;
      }
      dispatch(userLoaded(token, user))
 }
