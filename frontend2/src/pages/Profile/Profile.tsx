@@ -6,19 +6,21 @@ import { RootState } from "../../store/store";
 import { useSelector } from "react-redux";
 import MasterEditable from "../../components/Masters/MasterEditable";
 import styles from "./Profile.module.css";
+import { useTranslation } from "react-i18next";
 
 const ProfilePage: React.FC = () => {
      const [activeTab, setActiveTab] = useState("appointments");
      const user = useSelector((state: RootState) => state.auth.user);
+     const { t } = useTranslation();
 
      if (!user) return null;
 
-     const TABS = [{ id: "appointments", label: "Записи" }];
+     const TABS = [{ id: "appointments", label: t("profilePage.tabs.appointments") }];
 
      if (user.specialization !== "user") {
           TABS.push(
-               { id: "schedule", label: "Расписание" },
-               { id: "works", label: "Работы" }
+               { id: "schedule", label: t("profilePage.tabs.schedule") },
+               { id: "works", label: t("profilePage.tabs.works") }
           );
      }
 

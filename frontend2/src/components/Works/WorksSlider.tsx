@@ -5,6 +5,7 @@ import { RootState } from "../../store/store";
 import { getWorks } from "./Works.thunks";
 import { useAppDispatch } from "../../hooks/hooks";
 import WorkPreview from "./WorkPreview";
+import { useTranslation } from "react-i18next";
 
 type WorksSliderProps = {
      userId: string;
@@ -13,6 +14,7 @@ type WorksSliderProps = {
 
 const WorksSlider: React.FC<WorksSliderProps> = ({ userId, interval = 5000 }) => {
      const dispatch = useAppDispatch();
+     const { t } = useTranslation();
 
      const worksIds = useSelector((state: RootState) => state.works.worksIds);
      const loading = useSelector((state: RootState) => state.works.loading);
@@ -37,7 +39,9 @@ const WorksSlider: React.FC<WorksSliderProps> = ({ userId, interval = 5000 }) =>
 
           resetTimeout();
           timeoutRef.current = setTimeout(() => {
-               setCurrentIndex((prevIndex) => (prevIndex === worksIds.length - 1 ? 0 : prevIndex + 1));
+               setCurrentIndex((prevIndex) =>
+                    prevIndex === worksIds.length - 1 ? 0 : prevIndex + 1
+               );
           }, interval);
 
           return () => {
@@ -47,12 +51,16 @@ const WorksSlider: React.FC<WorksSliderProps> = ({ userId, interval = 5000 }) =>
 
      const prevSlide = () => {
           resetTimeout();
-          setCurrentIndex((prev) => (prev === 0 ? worksIds.length - 1 : prev - 1));
+          setCurrentIndex((prev) =>
+               prev === 0 ? worksIds.length - 1 : prev - 1
+          );
      };
 
      const nextSlide = () => {
           resetTimeout();
-          setCurrentIndex((prev) => (prev === worksIds.length - 1 ? 0 : prev + 1));
+          setCurrentIndex((prev) =>
+               prev === worksIds.length - 1 ? 0 : prev + 1
+          );
      };
 
      const openPreview = (workId: string) => {
@@ -63,14 +71,18 @@ const WorksSlider: React.FC<WorksSliderProps> = ({ userId, interval = 5000 }) =>
           setPreviewImage(null);
      };
 
-     if (loading) return <div>Загрузка...</div>;
-     if (error) return <div>Ошибка: {error}</div>;
+     if (loading) return <div>{t("worksSlider.loading")}</div>;
+     if (error) return <div>{t("worksSlider.error", { error })}</div>;
      if (!worksIds || worksIds.length === 0) return null;
 
      return (
           <div className={styles.worksSection}>
                <div className={styles.slider}>
-                    <button onClick={prevSlide} className={styles.navButton} aria-label="Предыдущее">
+                    <button
+                         onClick={prevSlide}
+                         className={styles.navButton}
+                         aria-label={t("worksSlider.prev")}
+                    >
                          ‹
                     </button>
                     <div className={styles.workItem}>
@@ -78,18 +90,25 @@ const WorksSlider: React.FC<WorksSliderProps> = ({ userId, interval = 5000 }) =>
                               <img
                                    key={work}
                                    src={`${__BASE_API_URL__}/users/${userId}/works/${work}`}
-                                   alt={`Пример работы ${index + 1}`}
-                                   className={`${styles.workImage} ${index === currentIndex ? styles.active : styles.inactive}`}
+                                   alt={t("worksSlider.workAlt", { index: index + 1 })}
+                                   className={`${styles.workImage} ${index === currentIndex ? styles.active : styles.inactive
+                                        }`}
                                    loading="lazy"
                                    onClick={() => openPreview(work.toString())}
                               />
                          ))}
                     </div>
-                    <button onClick={nextSlide} className={styles.navButton} aria-label="Следующее">
+                    <button
+                         onClick={nextSlide}
+                         className={styles.navButton}
+                         aria-label={t("worksSlider.next")}
+                    >
                          ›
                     </button>
                </div>
-               {previewImage && <WorkPreview imageUrl={previewImage} onClose={closePreview} />}
+               {previewImage && (
+                    <WorkPreview imageUrl={previewImage} onClose={closePreview} />
+               )}
           </div>
      );
 };

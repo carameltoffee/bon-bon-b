@@ -7,8 +7,10 @@ import { useNavigate } from 'react-router-dom';
 import { PasswordRepeat } from '../RepeatPassword/RepeatPassword';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
+import { useTranslation } from 'react-i18next';
 
 export const Restore: React.FC = () => {
+     const { t } = useTranslation();
      const dispatch = useAppDispatch();
      const navigate = useNavigate();
      const [sending, setSending] = useState(false);
@@ -49,7 +51,7 @@ export const Restore: React.FC = () => {
 
      return (
           <div className={styles.container}>
-               <h1 className={styles.title}>Изменение пароля</h1>
+               <h1 className={styles.title}>{t('auth.restore_title')}</h1>
                <form onSubmit={handleSubmit} className={styles.form}>
                     <div className={styles.row}>
                          <input
@@ -67,13 +69,13 @@ export const Restore: React.FC = () => {
                               className={styles.codeButton}
                               disabled={!form.email || sending}
                          >
-                              {sending ? <Spinner /> : 'Отправить код'}
+                              {sending ? <Spinner /> : t('auth.send_code')}
                          </button>
                     </div>
                     <input
                          type="text"
                          name="code"
-                         placeholder="Код подтверждения"
+                         placeholder={t('auth.confirmation_code')}
                          value={form.code}
                          onChange={handleChange}
                          className="w-full border p-2 rounded"
@@ -81,7 +83,7 @@ export const Restore: React.FC = () => {
                     />
                     <PasswordRepeat onChange={handlePasswordChange} />
                     <button type="submit" className={styles.submit}>
-                         Сменить пароль
+                         {t('auth.change_password')}
                     </button>
                </form>
           </div>

@@ -11,9 +11,12 @@ import {
      GetSchedule,
 } from './Schedule.thunks';
 import styles from './ScheduleEditor.module.css';
+import { useTranslation } from 'react-i18next';
 
 const ScheduleByDate: React.FC = () => {
      const dispatch = useAppDispatch();
+     const { t } = useTranslation();
+
      const token = useSelector((state: RootState) => state.auth.token);
      const userId = useSelector((state: RootState) => state.auth.user?.id);
      const schedule = useSelector((state: RootState) => state.schedule.schedule);
@@ -47,14 +50,23 @@ const ScheduleByDate: React.FC = () => {
           }
      }, [schedule, selectedDate]);
 
-     const addSlot = (input: string, setSlots: React.Dispatch<React.SetStateAction<string[]>>, slots: string[], setInput: React.Dispatch<React.SetStateAction<string>>) => {
+     const addSlot = (
+          input: string,
+          setSlots: React.Dispatch<React.SetStateAction<string[]>>,
+          slots: string[],
+          setInput: React.Dispatch<React.SetStateAction<string>>
+     ) => {
           if (input && !slots.includes(input)) {
                setSlots([...slots, input].sort());
                setInput('');
           }
      };
 
-     const removeSlot = (slot: string, slots: string[], setSlots: React.Dispatch<React.SetStateAction<string[]>>) => {
+     const removeSlot = (
+          slot: string,
+          slots: string[],
+          setSlots: React.Dispatch<React.SetStateAction<string[]>>
+     ) => {
           setSlots(slots.filter(s => s !== slot));
      };
 
@@ -99,7 +111,7 @@ const ScheduleByDate: React.FC = () => {
                                    onChange={(e) => setIsDayOff(e.target.checked)}
                               />
                               <span className={styles.slider}></span>
-                              <span>Выходной</span>
+                              <span>{t('scheduleByDate.dayOff')}</span>
                          </label>
 
                          {!isDayOff && (
@@ -115,7 +127,7 @@ const ScheduleByDate: React.FC = () => {
                                              className={styles.buttonPrimary}
                                              onClick={() => addSlot(dateSlotInput, setDateSlots, dateSlots, setDateSlotInput)}
                                         >
-                                             Добавить слот
+                                             {t('scheduleByDate.addSlot')}
                                         </button>
                                    </div>
 
@@ -135,12 +147,12 @@ const ScheduleByDate: React.FC = () => {
 
                          <div className={styles.section}>
                               <button className={styles.buttonSuccess} onClick={handleSaveDate}>
-                                   Сохранить
+                                   {t('scheduleByDate.save')}
                               </button>
 
                               {isDayOff && (
                                    <button className={styles.buttonDanger} onClick={handleRemoveDayOff}>
-                                        Удалить выходной
+                                        {t('scheduleByDate.deleteDayOff')}
                                    </button>
                               )}
                          </div>

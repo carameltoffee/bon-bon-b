@@ -1,0 +1,149 @@
+{
+     "appointments": {
+          "title_user": "Appointments you made",
+          "title_master": "Appointments to you as a master",
+          "no_appointments": "You have no appointments.",
+          "delete_confirm": "Are you sure you want to delete this appointment?",
+          "loading_name": "ID {{id}} (loading...)",
+          "loading_spec": "ummm",
+          "master": "Master",
+          "client": "Client",
+          "date": "Date",
+          "status": "Status",
+          "cancel": "Cancel"
+     },
+     "auth": {
+          "login_title": "Login",
+          "identifier_placeholder": "Username or email",
+          "password_placeholder": "Password",
+          "submit": "Log in",
+          "loading": "Loading...",
+          "forgot_password": "Forgot password?",
+          "register_title": "Register",
+          "full_name": "Full name",
+          "i_am_specialist": "I am a specialist",
+          "specialization": "Specialization",
+          "username": "Username",
+          "register_submit": "Sign up",
+          "restore_title": "Reset Password",
+          "send_code": "Send Code",
+          "confirmation_code": "Confirmation Code",
+          "change_password": "Change Password"
+     },
+     "avatar": {
+          "change_avatar": "Change Avatar"
+     },
+     "header": {
+          "logout": "Logout",
+          "login": "Login",
+          "register": "Register"
+     },
+     "master": {
+          "loading": "Loading master...",
+          "error": "Error: {{error}}",
+          "username": "Username",
+          "specialization": "Specialization",
+          "registered": "Registered"
+     },
+     "masterEditable": {
+          "loading": "Loading master...",
+          "error": "Error: {{error}}",
+          "notAuthorized": "You are not authorized",
+          "fullName": "Full Name",
+          "username": "Username",
+          "email": "Email",
+          "specialization": "Specialization",
+          "save": "Save",
+          "registered": "Registered"
+     },
+     "mastersList": {
+          "searchPlaceholder": "Search for a master...",
+          "searchError": "Error searching masters: {{error}}",
+          "noMastersFound": "No masters found."
+     },
+     "passwordRepeat": {
+          "placeholderPassword": "Password",
+          "placeholderRepeat": "Repeat password",
+          "errorMismatch": "Passwords do not match"
+     },
+     "addReview": {
+          "errorAuth": "Only authorized users can write reviews!",
+          "ratingLabel": "Rating",
+          "commentLabel": "Comment",
+          "commentPlaceholder": "Your review...",
+          "submitButton": "Submit"
+     },
+     "reviewsList": {
+          "loading": "Loading reviews...",
+          "title": "Reviews",
+          "noReviews": "No reviews yet.",
+          "rating": "Rating"
+     },
+     "schedule": {
+          "confirmMessage": "Do you want to book an appointment on {{date}} at {{slot}}?",
+          "errorAuth": "You must be authorized to book an appointment",
+          "success": "Successfully booked!",
+          "title": "Select a date for appointment",
+          "loadingSlots": "Loading slots...",
+          "availableTime": "Available time:",
+          "noSlots": "No available slots for the selected date."
+     },
+     "scheduleByDate": {
+          "dayOff": "Day off",
+          "addSlot": "Add slot",
+          "save": "Save",
+          "deleteDayOff": "Delete day off"
+     },
+     "scheduleByWeekday": {
+          "selectWeekday": "Select weekday",
+          "addSlot": "Add slot",
+          "saveFor": "Save for {{day}}"
+     },
+     "weekdays": {
+          "monday": "Monday",
+          "tuesday": "Tuesday",
+          "wednesday": "Wednesday",
+          "thursday": "Thursday",
+          "friday": "Friday",
+          "saturday": "Saturday",
+          "sunday": "Sunday"
+     },
+     "scheduleEditor": {
+          "heading": "Schedule Editor",
+          "tabs": {
+               "byDate": "By Date",
+               "byWeekday": "By Weekday"
+          }
+     },
+     "todaySchedule": {
+          "error": "Error: {{error}}",
+          "dayOff": "Today is a day off!",
+          "noAppointments": "No appointments for today",
+          "appointmentsCount": "Today {{count}} {{count, plural, one {appointment} other {appointments}}}"
+     },
+     "workPreview": {
+          "altText": "Work preview",
+          "closeLabel": "Close"
+     },
+     "worksEditor": {
+          "noAccess": "No access",
+          "upload": "Upload",
+          "loading": "Loading...",
+          "noWorks": "No uploaded works.",
+          "workAlt": "Work #{{id}}"
+     },
+     "worksSlider": {
+          "loading": "Loading...",
+          "error": "Error: {{error}}",
+          "prev": "Previous",
+          "next": "Next",
+          "workAlt": "Work example {{index}}"
+     },
+     "profilePage": {
+          "tabs": {
+               "appointments": "Appointments",
+               "schedule": "Schedule",
+               "works": "Works"
+          }
+     }
+}

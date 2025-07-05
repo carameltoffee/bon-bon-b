@@ -1,6 +1,7 @@
 import React from "react";
 import { formatTimestampUTC } from "../../utils/dates";
 import styles from "./AppointmentCard.module.css";
+import { useTranslation } from "react-i18next";
 
 interface AppointmentCardProps {
      id: number;
@@ -21,26 +22,33 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({
      onDelete,
      variant = "user",
 }) => {
+     const { t } = useTranslation();
      const bgClass = variant === "user" ? styles.bgUser : styles.bgMaster;
 
      return (
           <li className={`${styles.card} ${bgClass}`}>
                <div className={styles.data}>
                     <div>
-                         <strong>{variant === "user" ? "Мастер" : "Клиент"}:</strong> {name}
+                         <strong>
+                              {variant === "user"
+                                   ? t("appointments.master")
+                                   : t("appointments.client")}
+                              :
+                         </strong>{" "}
+                         {name}
                          {spec && ` (${spec})`}
                     </div>
                     <div>
-                         <strong>Дата:</strong> {formatTimestampUTC(date)}
+                         <strong>{t("appointments.date")}:</strong> {formatTimestampUTC(date)}
                     </div>
                     {status && (
                          <div>
-                              <strong>Статус:</strong> {status}
+                              <strong>{t("appointments.status")}:</strong> {status}
                          </div>
                     )}
                </div>
                <button className={styles.deleteBtn} onClick={() => onDelete(id)}>
-                    Отменить
+                    {t("appointments.cancel")}
                </button>
           </li>
      );

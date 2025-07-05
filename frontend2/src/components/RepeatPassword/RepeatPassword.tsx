@@ -1,17 +1,19 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface PasswordRepeatProps {
      onChange: (password: string) => void;
 }
 
 export const PasswordRepeat: React.FC<PasswordRepeatProps> = ({ onChange }) => {
+     const { t } = useTranslation();
      const [password, setPassword] = useState('');
      const [repeat, setRepeat] = useState('');
      const [error, setError] = useState('');
 
      useEffect(() => {
           if (password && repeat && password !== repeat) {
-               setError('Пароли не совпадают');
+               setError(t('passwordRepeat.errorMismatch'));
                onChange('');
           } else {
                setError('');
@@ -19,13 +21,13 @@ export const PasswordRepeat: React.FC<PasswordRepeatProps> = ({ onChange }) => {
                     onChange(password);
                }
           }
-     }, [password, repeat, onChange]);
+     }, [password, repeat, onChange, t]);
 
      return (
           <div style={{ width: '100%' }}>
                <input
                     type="password"
-                    placeholder="Пароль"
+                    placeholder={t('passwordRepeat.placeholderPassword')}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     style={{ width: '100%', display: 'block', marginBottom: '0.5rem' }}
@@ -33,7 +35,7 @@ export const PasswordRepeat: React.FC<PasswordRepeatProps> = ({ onChange }) => {
                />
                <input
                     type="password"
-                    placeholder="Повторите пароль"
+                    placeholder={t('passwordRepeat.placeholderRepeat')}
                     value={repeat}
                     onChange={(e) => setRepeat(e.target.value)}
                     style={{ width: '100%', display: 'block' }}

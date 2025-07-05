@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../hooks/hooks";
 import { uploadAvatar } from "./Avatar.thunks";
 import classNames from "classnames";
+import { useTranslation } from "react-i18next";
 
 type AvatarProps = {
      userId: string;
@@ -22,6 +23,7 @@ const Avatar: React.FC<AvatarProps> = ({
      editable = false,
      clickable = false,
 }) => {
+     const { t } = useTranslation();
      const fileInputRef = useRef<HTMLInputElement>(null);
      const token = useSelector((state: RootState) => state.auth.token);
      const dispatch = useAppDispatch();
@@ -32,10 +34,8 @@ const Avatar: React.FC<AvatarProps> = ({
      };
 
      const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-          if (!token) {
-               return;
-          }
-          const file = e.target.files && e.target.files[0];
+          if (!token) return;
+          const file = e.target.files?.[0];
           if (!file) return;
           dispatch(uploadAvatar(file, token));
      };
@@ -61,14 +61,13 @@ const Avatar: React.FC<AvatarProps> = ({
                          e.currentTarget.src = AvatarPlaceholder;
                     }}
                     className={styles.avatarImage}
-                    style={{
-                         width: size,
-                         height: size,
-                    }}
+                    style={{ width: size, height: size }}
                />
-               {editable && <div className={styles.overlay}>
-                    <p>Сменить аватар</p>
-               </div>}
+               {editable && (
+                    <div className={styles.overlay}>
+                         <p>{t("avatar.change_avatar")}</p>
+                    </div>
+               )}
                {editable && (
                     <input
                          type="file"

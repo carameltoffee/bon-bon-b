@@ -7,19 +7,19 @@ import { useAppDispatch } from "../../hooks/hooks";
 import WorksSlider from "../Works/WorksSlider";
 import styles from "./Master.module.css";
 import Stars from "../Stars/Stars";
+import { useTranslation } from "react-i18next";
 
 type MasterProps = {
 	masterId: string;
 };
 
 const Master: React.FC<MasterProps> = ({ masterId }) => {
+	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 
 	const master = useSelector(
 		(state: RootState) => state.masters.mastersById[masterId]
 	);
-
-	console.log(master);
 	const isLoading = useSelector((state: RootState) => state.masters.loading);
 	const error = useSelector((state: RootState) => state.masters.error);
 
@@ -29,8 +29,9 @@ const Master: React.FC<MasterProps> = ({ masterId }) => {
 		}
 	}, [dispatch, masterId, master]);
 
-	if (isLoading) return <div>Загрузка мастера...</div>;
-	if (error || !master) return <div style={{ color: "red" }}>Ошибка: {error}</div>;
+	if (isLoading) return <div>{t("master.loading")}</div>;
+	if (error || !master)
+		return <div style={{ color: "red" }}>{t("master.error", { error })}</div>;
 
 	return (
 		<div className={styles.container}>
@@ -39,14 +40,21 @@ const Master: React.FC<MasterProps> = ({ masterId }) => {
 					<Avatar userId={masterId} />
 				</div>
 				<h1>{master.full_name}</h1>
-				<p><strong>Логин:</strong> {master.username}</p>
+				<p>
+					<strong>{t("master.username")}:</strong> {master.username}
+				</p>
 				{master.specialization && (
-					<p><strong>Специализация:</strong> {master.specialization}</p>
+					<p>
+						<strong>{t("master.specialization")}:</strong> {master.specialization}
+					</p>
 				)}
-				<p><strong>Зарегистрирован:</strong> {new Date(master.registered_at).toLocaleDateString()}</p>
+				<p>
+					<strong>{t("master.registered")}:</strong>{" "}
+					{new Date(master.registered_at).toLocaleDateString()}
+				</p>
 				{master.average_rating !== undefined && (
-					<Stars rating={master.average_rating}/>
-				) }
+					<Stars rating={master.average_rating} />
+				)}
 			</div>
 
 			<div className={styles.rightCol}>

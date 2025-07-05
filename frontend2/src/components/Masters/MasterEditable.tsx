@@ -6,12 +6,14 @@ import Avatar from "../Avatar/Avatar";
 import { useAppDispatch } from "../../hooks/hooks";
 import styles from "./Master.module.css";
 import { setErrorAlert } from "../Alert/Alert.thunks";
+import { useTranslation } from "react-i18next";
 
 type MasterProps = {
      masterId: string;
 };
 
 const MasterEditable: React.FC<MasterProps> = ({ masterId }) => {
+     const { t } = useTranslation();
      const dispatch = useAppDispatch();
 
      const master = useSelector(
@@ -48,44 +50,48 @@ const MasterEditable: React.FC<MasterProps> = ({ masterId }) => {
      }, [dispatch, masterId, master]);
 
      const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-          setForm({ ...form, [e.target.name]: e.target.value });
+          setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
      };
 
      const handleSubmit = (e: React.FormEvent) => {
           e.preventDefault();
           if (!token) {
-               dispatch(setErrorAlert("Вы не авторизованы"));
+               dispatch(setErrorAlert(t("masterEditable.notAuthorized")));
                return;
           }
           dispatch(UpdateMaster(form, token));
      };
 
-     if (isLoading) return <div>Загрузка мастера...</div>;
-     if (error || !master) return <div>Ошибка: {error}</div>;
+     if (isLoading) return <div>{t("masterEditable.loading")}</div>;
+     if (error || !master)
+          return <div style={{ color: "red" }}>{t("masterEditable.error", { error })}</div>;
 
      return (
           <div className={styles.container}>
                <Avatar userId={masterId} editable={true} />
                <form onSubmit={handleSubmit} className={styles.form}>
                     <label>
-                         Имя:
+                         {t("masterEditable.fullName")}:
                          <input name="full_name" value={form.full_name} onChange={handleChange} />
                     </label>
                     <label>
-                         Логин:
+                         {t("masterEditable.username")}:
                          <input name="username" value={form.username} onChange={handleChange} />
                     </label>
                     <label>
-                         Почта:
-                         <input name="email" value={form.email} onChange={handleChange} />
+                         {t("masterEditable.email")}:
+                         <input type="email" name="email" value={form.email} onChange={handleChange} />
                     </label>
                     <label>
-                         Специализация:
+                         {t("masterEditable.specialization")}:
                          <input name="specialization" value={form.specialization} onChange={handleChange} />
                     </label>
-                    <button type="submit">Сохранить</button>
+                    <button type="submit">{t("masterEditable.save")}</button>
                </form>
-               <p><strong>Зарегистрирован:</strong> {new Date(master.registered_at).toLocaleDateString()}</p>
+               <p>
+                    <strong>{t("masterEditable.registered")}:</strong>{" "}
+                    {new Date(master.registered_at).toLocaleDateString()}
+               </p>
           </div>
      );
 };

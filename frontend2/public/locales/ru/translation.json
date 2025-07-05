@@ -1,0 +1,149 @@
+{
+     "appointments": {
+          "title_user": "Записи, которые вы сделали",
+          "title_master": "Записи к вам как к мастеру",
+          "no_appointments": "У вас нет записей.",
+          "delete_confirm": "Вы уверены, что хотите удалить эту запись?",
+          "loading_name": "ID {{id}} (загрузка...)",
+          "loading_spec": "эммм",
+          "master": "Мастер",
+          "client": "Клиент",
+          "date": "Дата",
+          "status": "Статус",
+          "cancel": "Отменить"
+     },
+     "auth": {
+          "login_title": "Вход",
+          "identifier_placeholder": "Логин или почта",
+          "password_placeholder": "Пароль",
+          "submit": "Войти",
+          "loading": "Загрузка...",
+          "forgot_password": "Забыли пароль?",
+          "register_title": "Регистрация",
+          "full_name": "Полное имя",
+          "i_am_specialist": "Я специалист",
+          "specialization": "Специализация",
+          "username": "Логин",
+          "register_submit": "Зарегистрироваться",
+          "restore_title": "Изменение пароля",
+          "send_code": "Отправить код",
+          "confirmation_code": "Код подтверждения",
+          "change_password": "Сменить пароль"
+     },
+     "avatar": {
+          "change_avatar": "Сменить аватар"
+     },
+     "header": {
+          "logout": "Выйти",
+          "login": "Войти",
+          "register": "Регистрация"
+     },
+     "master": {
+          "loading": "Загрузка мастера...",
+          "error": "Ошибка: {{error}}",
+          "username": "Логин",
+          "specialization": "Специализация",
+          "registered": "Зарегистрирован"
+     },
+     "masterEditable": {
+          "loading": "Загрузка мастера...",
+          "error": "Ошибка: {{error}}",
+          "notAuthorized": "Вы не авторизованы",
+          "fullName": "Имя",
+          "username": "Логин",
+          "email": "Почта",
+          "specialization": "Специализация",
+          "save": "Сохранить",
+          "registered": "Зарегистрирован"
+     },
+     "mastersList": {
+          "searchPlaceholder": "Поиск мастера...",
+          "searchError": "Ошибка при поиске мастеров: {{error}}",
+          "noMastersFound": "Мастера не найдены."
+     },
+     "passwordRepeat": {
+          "placeholderPassword": "Пароль",
+          "placeholderRepeat": "Повторите пароль",
+          "errorMismatch": "Пароли не совпадают"
+     },
+     "addReview": {
+          "errorAuth": "Писать отзывы могут только авторизованные пользователи!",
+          "ratingLabel": "Оценка",
+          "commentLabel": "Комментарий",
+          "commentPlaceholder": "Ваш отзыв...",
+          "submitButton": "Отправить"
+     },
+     "reviewsList": {
+          "loading": "Загрузка отзывов...",
+          "title": "Отзывы",
+          "noReviews": "Отзывов пока нет.",
+          "rating": "Оценка"
+     },
+     "schedule": {
+          "confirmMessage": "Вы хотите записаться {{date}} на {{slot}}?",
+          "errorAuth": "Нужно быть авторизованным для записи",
+          "success": "Успешно записались!",
+          "title": "Выберите дату для записи",
+          "loadingSlots": "Загрузка слотов...",
+          "availableTime": "Доступное время:",
+          "noSlots": "Нет доступных слотов на выбранную дату."
+     },
+     "scheduleByDate": {
+          "dayOff": "Выходной",
+          "addSlot": "Добавить слот",
+          "save": "Сохранить",
+          "deleteDayOff": "Удалить выходной"
+     },
+     "scheduleByWeekday": {
+          "selectWeekday": "Выберите день недели",
+          "addSlot": "Добавить слот",
+          "saveFor": "Сохранить для {{day}}"
+     },
+     "weekdays": {
+          "monday": "Понедельник",
+          "tuesday": "Вторник",
+          "wednesday": "Среда",
+          "thursday": "Четверг",
+          "friday": "Пятница",
+          "saturday": "Суббота",
+          "sunday": "Воскресенье"
+     },
+     "scheduleEditor": {
+          "heading": "Редактирование расписания",
+          "tabs": {
+               "byDate": "По дате",
+               "byWeekday": "По дню недели"
+          }
+     },
+     "todaySchedule": {
+          "error": "Ошибка: {{error}}",
+          "dayOff": "Сегодня выходной!",
+          "noAppointments": "На сегодня нет записей",
+          "appointmentsCount": "Сегодня {{count}} {{count, plural, one {запись} few {записи} many {записей} other {записей}}}"
+     },
+     "workPreview": {
+          "altText": "Предпросмотр работы",
+          "closeLabel": "Закрыть"
+     },
+     "worksEditor": {
+          "noAccess": "Нет доступа",
+          "upload": "Загрузить",
+          "loading": "Загрузка...",
+          "noWorks": "Нет загруженных работ.",
+          "workAlt": "Работа №{{id}}"
+     },
+     "worksSlider": {
+          "loading": "Загрузка...",
+          "error": "Ошибка: {{error}}",
+          "prev": "Предыдущее",
+          "next": "Следующее",
+          "workAlt": "Пример работы {{index}}"
+     },
+     "profilePage": {
+          "tabs": {
+               "appointments": "Записи",
+               "schedule": "Расписание",
+               "works": "Работы"
+          }
+     }
+}

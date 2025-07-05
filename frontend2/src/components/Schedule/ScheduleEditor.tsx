@@ -1,27 +1,29 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from './ScheduleEditor.module.css';
 import ScheduleByDate from './ScheduleByDate';
 import ScheduleByWeekday from './ScheduleByWeekday';
 
 const ScheduleEditor: React.FC = () => {
+     const { t } = useTranslation();
      const [tab, setTab] = useState<'date' | 'weekday'>('date');
 
      return (
           <div className={styles.wrapper}>
-               <h2 className={styles.heading}>Редактирование расписания</h2>
+               <h2 className={styles.heading}>{t('scheduleEditor.heading')}</h2>
 
                <div className={styles.tabs}>
                     <button
                          className={`${styles.tab} ${tab === 'date' ? styles.activeTab : ''}`}
                          onClick={() => setTab('date')}
                     >
-                         По дате
+                         {t('scheduleEditor.tabs.byDate')}
                     </button>
                     <button
                          className={`${styles.tab} ${tab === 'weekday' ? styles.activeTab : ''}`}
                          onClick={() => setTab('weekday')}
                     >
-                         По дню недели
+                         {t('scheduleEditor.tabs.byWeekday')}
                     </button>
                </div>
 

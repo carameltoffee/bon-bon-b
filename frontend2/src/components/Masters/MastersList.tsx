@@ -8,8 +8,10 @@ import { searchUsers } from "../Search/Search.thunks";
 import debounce from "lodash.debounce";
 import styles from "./MastersList.module.css";
 import Stars from "../Stars/Stars";
+import { useTranslation } from "react-i18next";
 
 const MastersList: React.FC = () => {
+     const { t } = useTranslation();
      const dispatch = useAppDispatch();
      const navigate = useNavigate();
 
@@ -47,7 +49,7 @@ const MastersList: React.FC = () => {
           <div className={styles.wrapper}>
                <input
                     type="text"
-                    placeholder="Поиск мастера..."
+                    placeholder={t("mastersList.searchPlaceholder")}
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     className={styles.input}
@@ -55,10 +57,14 @@ const MastersList: React.FC = () => {
 
                {loading && <Spinner />}
                {!loading && error && (
-                    <p style={{ color: 'red' }}>Ошибка при поиске мастеров: {error}</p>
+                    <p style={{ color: "red" }}>
+                         {t("mastersList.searchError", { error })}
+                    </p>
                )}
                {!loading && !error && safeUsers.length === 0 && (
-                    <p style={{ color: '#777' }}>Мастера не найдены.</p>
+                    <p style={{ color: "#777" }}>
+                         {t("mastersList.noMastersFound")}
+                    </p>
                )}
 
                <div className={styles.grid}>

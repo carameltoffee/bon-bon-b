@@ -4,6 +4,7 @@ import { AddReview } from "./Reviews.thunks";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { setErrorAlert } from "../Alert/Alert.thunks";
+import { useTranslation } from "react-i18next";
 import styles from "./AddReviewForm.module.css";
 
 type AddReviewFormProps = {
@@ -12,6 +13,7 @@ type AddReviewFormProps = {
 
 const AddReviewForm: React.FC<AddReviewFormProps> = ({ masterId }) => {
      const dispatch = useAppDispatch();
+     const { t } = useTranslation();
 
      const [comment, setComment] = useState("");
      const [rating, setRating] = useState(5);
@@ -21,7 +23,7 @@ const AddReviewForm: React.FC<AddReviewFormProps> = ({ masterId }) => {
      const handleSubmit = (e: React.FormEvent) => {
           e.preventDefault();
           if (!token || !user) {
-               dispatch(setErrorAlert("Писать отзывы могут только авторизованные пользователи!"));
+               dispatch(setErrorAlert(t("addReview.errorAuth")));
                return;
           }
 
@@ -39,7 +41,7 @@ const AddReviewForm: React.FC<AddReviewFormProps> = ({ masterId }) => {
      return (
           <form onSubmit={handleSubmit} className={styles.form}>
                <div className={styles.rateGroup}>
-                    <label htmlFor="rating" className={styles.label}>Оценка</label>
+                    <label htmlFor="rating" className={styles.label}>{t("addReview.ratingLabel")}</label>
                     <select
                          id="rating"
                          value={rating}
@@ -55,18 +57,18 @@ const AddReviewForm: React.FC<AddReviewFormProps> = ({ masterId }) => {
                </div>
 
                <div className={styles.labelGroup} style={{ flex: "2 1 300px" }}>
-                    <label htmlFor="comment" className={styles.label}>Комментарий</label>
+                    <label htmlFor="comment" className={styles.label}>{t("addReview.commentLabel")}</label>
                     <textarea
                          id="comment"
                          value={comment}
                          onChange={(e) => setComment(e.target.value)}
                          rows={2}
                          className={styles.textarea}
-                         placeholder="Ваш отзыв..."
+                         placeholder={t("addReview.commentPlaceholder")}
                     />
                </div>
 
-               <button type="submit" className={styles.button}>Отправить</button>
+               <button type="submit" className={styles.button}>{t("addReview.submitButton")}</button>
           </form>
      );
 };

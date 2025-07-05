@@ -4,19 +4,21 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import { setWorkingHoursByWeekday } from './Schedule.thunks';
 import styles from './ScheduleEditor.module.css';
+import { useTranslation } from 'react-i18next';
 
-const weekdayMap = [
-     { ru: 'Понедельник', en: 'monday' },
-     { ru: 'Вторник', en: 'tuesday' },
-     { ru: 'Среда', en: 'wednesday' },
-     { ru: 'Четверг', en: 'thursday' },
-     { ru: 'Пятница', en: 'friday' },
-     { ru: 'Суббота', en: 'saturday' },
-     { ru: 'Воскресенье', en: 'sunday' },
+const weekdays = [
+     'monday',
+     'tuesday',
+     'wednesday',
+     'thursday',
+     'friday',
+     'saturday',
+     'sunday',
 ];
 
 const ScheduleByWeekday: React.FC = () => {
      const dispatch = useAppDispatch();
+     const { t } = useTranslation();
      const token = useSelector((state: RootState) => state.auth.token);
      if (!token) return null;
 
@@ -24,19 +26,28 @@ const ScheduleByWeekday: React.FC = () => {
      const [weekdaySlots, setWeekdaySlots] = useState<string[]>([]);
      const [weekdaySlotInput, setWeekdaySlotInput] = useState('');
 
-     const addSlot = (input: string, setSlots: React.Dispatch<React.SetStateAction<string[]>>, slots: string[], setInput: React.Dispatch<React.SetStateAction<string>>) => {
+     const addSlot = (
+          input: string,
+          setSlots: React.Dispatch<React.SetStateAction<string[]>>,
+          slots: string[],
+          setInput: React.Dispatch<React.SetStateAction<string>>
+     ) => {
           if (input && !slots.includes(input)) {
                setSlots([...slots, input].sort());
                setInput('');
           }
      };
 
-     const removeSlot = (slot: string, slots: string[], setSlots: React.Dispatch<React.SetStateAction<string[]>>) => {
+     const removeSlot = (
+          slot: string,
+          slots: string[],
+          setSlots: React.Dispatch<React.SetStateAction<string[]>>
+     ) => {
           setSlots(slots.filter(s => s !== slot));
      };
 
      const handleSaveWeekday = () => {
-          const dayEn = weekdayMap[weekday].en;
+          const dayEn = weekdays[weekday];
           if (weekdaySlots.length > 0) {
                dispatch(setWorkingHoursByWeekday(token, dayEn, weekdaySlots));
           }
@@ -44,15 +55,15 @@ const ScheduleByWeekday: React.FC = () => {
 
      return (
           <div className={styles.tabContent}>
-               <label className={styles.label}>Выберите день недели</label>
+               <label className={styles.label}>{t('scheduleByWeekday.selectWeekday')}</label>
                <select
                     className={styles.input}
                     value={weekday}
                     onChange={(e) => setWeekday(Number(e.target.value))}
                >
-                    {weekdayMap.map((day, idx) => (
-                         <option key={idx} value={idx}>
-                              {day.ru}
+                    {weekdays.map((day, idx) => (
+                         <option key={day} value={idx}>
+                              {t(`weekdays.${day}`)}
                          </option>
                     ))}
                </select>
@@ -66,9 +77,11 @@ const ScheduleByWeekday: React.FC = () => {
                     />
                     <button
                          className={styles.buttonPrimary}
-                         onClick={() => addSlot(weekdaySlotInput, setWeekdaySlots, weekdaySlots, setWeekdaySlotInput)}
+                         onClick={() =>
+                              addSlot(weekdaySlotInput, setWeekdaySlots, weekdaySlots, setWeekdaySlotInput)
+                         }
                     >
-                         Добавить слот
+                         {t('scheduleByWeekday.addSlot')}
                     </button>
                </div>
 
@@ -86,7 +99,7 @@ const ScheduleByWeekday: React.FC = () => {
 
                <div className={styles.section}>
                     <button className={styles.buttonSuccess} onClick={handleSaveWeekday}>
-                         Сохранить для {weekdayMap[weekday].ru}
+                         {t('scheduleByWeekday.saveFor', { day: t(`weekdays.${weekdays[weekday]}`) })}
                     </button>
                </div>
           </div>

@@ -4,13 +4,14 @@ import { RootState } from "../../store/store";
 import { useAppDispatch } from "../../hooks/hooks";
 import { getWorks, deleteWork, addWork } from "./Works.thunks";
 import styles from "./WorksEditor.module.css";
-
+import { useTranslation } from "react-i18next";
 
 const WorksEditor: React.FC = () => {
      const dispatch = useAppDispatch();
      const { worksIds, loading, error } = useSelector((state: RootState) => state.works);
      const token = useSelector((state: RootState) => state.auth.token);
      const user = useSelector((state: RootState) => state.auth.user);
+     const { t } = useTranslation();
 
      const [file, setFile] = useState<File | null>(null);
 
@@ -36,7 +37,7 @@ const WorksEditor: React.FC = () => {
      };
 
      if (!token || !user) {
-          return <p>Нет доступа</p>;
+          return <p>{t("worksEditor.noAccess")}</p>;
      }
 
      return (
@@ -53,28 +54,30 @@ const WorksEditor: React.FC = () => {
                          disabled={!file}
                          className={styles.uploadButton}
                     >
-                         Загрузить
+                         {t("worksEditor.upload")}
                     </button>
                </div>
 
                {error && <p className="text-red-500">{error}</p>}
 
                <div className={styles.grid}>
-                    {loading && <p>Загрузка...</p>}
+                    {loading && <p>{t("worksEditor.loading")}</p>}
                     {!loading && (!worksIds || worksIds.length === 0) && (
-                         <p className={styles.message}>Нет загруженных работ.</p>
+                         <p className={styles.message}>{t("worksEditor.noWorks")}</p>
                     )}
-                    {!loading && worksIds &&
+                    {!loading &&
+                         worksIds &&
                          worksIds.map((id) => (
                               <div key={id} className={styles.card}>
                                    <img
                                         src={`${__BASE_API_URL__}/users/${user.id}/works/${id}`}
-                                        alt={`Работа #${id}`}
+                                        alt={t("worksEditor.workAlt", { id })}
                                         className={styles.image}
                                    />
                                    <button
                                         onClick={() => handleDelete(id)}
                                         className={styles.deleteButton}
+                                        aria-label={t("worksEditor.workAlt", { id })}
                                    >
                                         ✕
                                    </button>
@@ -84,6 +87,5 @@ const WorksEditor: React.FC = () => {
           </div>
      );
 };
-
 
 export default WorksEditor;
