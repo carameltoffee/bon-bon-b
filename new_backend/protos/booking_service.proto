@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package booking;
+
+option go_package = "/bb";
+
+service BookingService {
+     rpc CreateBooking (CreateBookingRequest) returns (BookingResponse);
+     rpc GetBooking (BookingIdRequest) returns (BookingResponse);
+     rpc UpdateBooking (UpdateBookingRequest) returns (BookingResponse);
+     rpc DeleteBooking (BookingIdRequest) returns (Empty);
+     rpc ListBookings (Empty) returns (BookingListResponse);
+}
+
+message Booking {
+     string id = 1;
+     string user_id = 2;
+     string slot_id = 3;
+     string type = 4;
+     string contact_phone = 5;
+     string comment = 6;
+     string status = 7;
+     string created_at = 8;
+     string updated_at = 9;
+}
+
+message CreateBookingRequest {
+     string user_id = 1;
+     string slot_id = 2;
+     string type = 3;
+     string contact_phone = 4;
+     string comment = 5;
+}
+
+message UpdateBookingRequest {
+     string id = 1;
+     string status = 2;
+     string comment = 3;
+}
+
+message BookingIdRequest {
+     string id = 1;
+}
+
+message BookingResponse {
+     Booking booking = 1;
+}
+
+message BookingListResponse {
+     repeated Booking bookings = 1;
+}
+
+message Empty {}

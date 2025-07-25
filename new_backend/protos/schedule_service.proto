@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package schedule;
+
+option go_package = "/bb";
+
+service ScheduleService {
+     rpc CreateSlot (CreateSlotRequest) returns (SlotResponse);
+     rpc GetSlot (SlotIdRequest) returns (SlotResponse);
+     rpc ListSlots (Empty) returns (SlotListResponse);
+     rpc UpdateSlot (UpdateSlotRequest) returns (SlotResponse);
+     rpc DeleteSlot (SlotIdRequest) returns (Empty);
+     rpc ListAvailableSlots (Empty) returns (SlotListResponse);
+}
+
+message Slot {
+     string id = 1;
+     string user_id = 2;
+     string time = 3;
+     bool is_available = 4;
+}
+
+message CreateSlotRequest {
+     string user_id = 1;
+     string time = 2;
+}
+
+message UpdateSlotRequest {
+     string id = 1;
+     bool is_available = 2;
+}
+
+message SlotIdRequest {
+     string id = 1;
+}
+
+message SlotResponse {
+     Slot slot = 1;
+}
+
+message SlotListResponse {
+     repeated Slot slots = 1;
+}
+
+message Empty {}
