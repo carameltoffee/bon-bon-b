@@ -12,14 +12,14 @@ service UserService {
 	rpc GetUser (UserIdRequest) returns (UserResponse);
 	rpc UpdateUser (UpdateUserRequest) returns (UserResponse);
 	rpc DeleteUser (UserIdRequest) returns (google.protobuf.Empty);
-	rpc ListUsers (google.protobuf.Empty) returns (UserListResponse);
+	rpc Search (SearchQuery) returns (UserListResponse);
 
 	rpc Login (LoginRequest) returns (AuthResponse);
 	rpc Logout (UserIdRequest) returns (google.protobuf.Empty);
 }
 
 message User {
-	string id = 1;
+	int64 id = 1;
 	string name = 2;
 	string bio = 3;
 	string username = 4;
@@ -38,6 +38,10 @@ message User {
 	google.protobuf.Timestamp updated_at = 15;
 }
 
+message SearchQuery {
+	string query = 1;
+}
+
 message CreateUserRequest {
 	string name = 1;
 	string bio = 2;
@@ -49,7 +53,7 @@ message CreateUserRequest {
 }
 
 message UpdateUserRequest {
-	string id = 1;
+	int64 id = 1;
 	string name = 2;
 	string bio = 3;
 	string email = 4;
@@ -60,7 +64,7 @@ message UpdateUserRequest {
 }
 
 message UserIdRequest {
-	string id = 1;
+	int64 id = 1;
 }
 
 message LoginRequest {
