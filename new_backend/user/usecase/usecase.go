@@ -1,10 +1,10 @@
 package usecase
 
 import (
-	"bb/user/pkg/hasher"
-	"bb/user/pkg/jwt"
-	"bb/user/repository"
 	"time"
+	"user/pkg/hasher"
+	"user/pkg/jwt"
+	"user/repository"
 
 	"go.uber.org/zap"
 )

@@ -1,14 +1,14 @@
 package repository
 
 import (
-	"bb/user/models"
 	"context"
+	"user/models"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type UserRepository struct {
-	conn *pgxpool.Conn
+	conn *pgxpool.Pool
 }
 
 type User interface {
@@ -17,8 +17,10 @@ type User interface {
 	UpdateUser(ctx context.Context, u *models.User) error
 	SoftDeleteUser(ctx context.Context, id int64) error
 	GetByUsernameOrEmail(ctx context.Context, login string) (*models.User, error)
+	SearchUsers(ctx context.Context, query string) ([]models.User, error)
+	AddLoginMetadata(ctx context.Context, userId int64, ip string) error
 }
 
-func NewUserRepository(conn *pgxpool.Conn) User {
+func NewUserRepository(conn *pgxpool.Pool) User {
 	return &UserRepository{conn: conn}
 }

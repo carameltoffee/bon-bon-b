@@ -7,7 +7,7 @@ CREATE TABLE users (
     username TEXT NOT NULL UNIQUE,
     email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
-    specialization VARCHAR(100) DEFAULT '-'
+    specialization VARCHAR(100) DEFAULT '-',
     role CHAR(5) NOT NULL DEFAULT 'user',                 
     is_active BOOLEAN NOT NULL DEFAULT TRUE,          
     email_verified BOOLEAN NOT NULL DEFAULT FALSE,     
