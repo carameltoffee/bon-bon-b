@@ -11,6 +11,11 @@ import (
 func (uc *UserUsecase) CreateUser(ctx context.Context, user *models.User) error {
 	uc.logger.Info("creating user", zap.String("username", user.Username), zap.String("email", user.Email))
 
+	if err := user.Validate(); err != nil {
+		uc.logger.Warn("validation error while checking user", zap.Error(err))
+		return fmt.Errorf("%w: %v", ErrValidationError, err)
+	}
+
 	hashedPassword, err := uc.hasher.Hash(user.Password)
 	if err != nil {
 		uc.logger.Error("failed to hash password", zap.Error(err))
@@ -43,6 +48,11 @@ func (uc *UserUsecase) GetUserByID(ctx context.Context, id int64) (*models.User,
 
 func (uc *UserUsecase) UpdateUser(ctx context.Context, user *models.User) error {
 	uc.logger.Info("updating user", zap.Int64("user_id", user.ID))
+
+	if err := user.Validate(); err != nil {
+		uc.logger.Warn("validation error while checking user", zap.Error(err))
+		return fmt.Errorf("%w: %v", ErrValidationError, err)
+	}
 
 	if err := uc.repo.UpdateUser(ctx, user); err != nil {
 		uc.logger.Error("failed to update user", zap.Int64("user_id", user.ID), zap.Error(err))

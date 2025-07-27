@@ -12,4 +12,5 @@ var (
 	ErrGenerateToken      = errors.New("failed to generate token")
 	ErrGetUserByID        = errors.New("failed to get user by ID")
 	ErrFailedToFindUsers  = errors.New("failed to find users")
+	ErrValidationError    = errors.New("bad user")
 )
