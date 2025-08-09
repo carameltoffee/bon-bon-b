@@ -16,6 +16,7 @@ type RegisterReq struct {
 	Email          string `json:"email"`
 	Password       string `json:"password"`
 	Specialization string `json:"specialization"`
+	ScheduleType   string `json:"schedule_type"`
 	Code           string `json:"code"`
 }
 
@@ -55,6 +56,7 @@ func (h *Handler) Register(c *gin.Context) {
 		Username:       data.Username,
 		Password:       data.Password,
 		Specialization: data.Specialization,
+		ScheduleType:   data.ScheduleType,
 		AverageRating:  5,
 	}
 
@@ -128,6 +130,7 @@ type UpdateReq struct {
 	Specialization string `json:"specialization"`
 	Bio            string `json:"bio"`
 	FullName       string `json:"full_name"`
+	ScheduleType   string `json:"schedule_type"`
 }
 
 // @Summary Update User
@@ -161,6 +164,7 @@ func (h *Handler) UpdateUser(c *gin.Context) {
 		Bio:            data.Bio,
 		Specialization: data.Specialization,
 		Email:          data.Email,
+		ScheduleType:   data.ScheduleType,
 		Password:       "pLACEHOLDERPASSWORD_42",
 	})
 	if err != nil {

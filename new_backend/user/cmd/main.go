@@ -13,6 +13,7 @@ import (
 	"user/pkg/hasher"
 	"user/pkg/jwt"
 	db "user/pkg/postgres"
+	"user/pkg/rabbitmq"
 	"user/repository"
 	"user/usecase"
 
@@ -39,9 +40,13 @@ func main() {
 	}
 	defer db.Close()
 
+	publisher := rabbitmq.NewDefaultRMQPublisher(cfg.RabbitMq.Uri)
+
+	defer publisher.Close()
+
 	repo := repository.NewUserRepository(db)
 
-	uc := usecase.NewUserUsecase(repo, logger, hasher.NewBcryptHasher(), jwt.NewJWTManager(cfg.JWTSecret), cfg.TTL)
+	uc := usecase.NewUserUsecase(repo, logger, hasher.NewBcryptHasher(), jwt.NewJWTManager(cfg.JWTSecret), cfg.TTL, publisher)
 
 	delivery.NewUserServerGrpc(grpcServer, logger, uc)
 

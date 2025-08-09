@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v3.21.12
-// source: schedule_service.proto
+// source: protos/schedule_service.proto
 
 package schedule
 
@@ -19,12 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ScheduleService_CreateSlot_FullMethodName                = "/schedule.ScheduleService/CreateSlot"
-	ScheduleService_GetSlot_FullMethodName                   = "/schedule.ScheduleService/GetSlot"
-	ScheduleService_UpdateSlot_FullMethodName                = "/schedule.ScheduleService/UpdateSlot"
-	ScheduleService_DeleteSlot_FullMethodName                = "/schedule.ScheduleService/DeleteSlot"
-	ScheduleService_ListBusySlotsForUser_FullMethodName      = "/schedule.ScheduleService/ListBusySlotsForUser"
-	ScheduleService_ListAvailableSlotsForUser_FullMethodName = "/schedule.ScheduleService/ListAvailableSlotsForUser"
+	ScheduleService_CreateSlot_FullMethodName                 = "/schedule.ScheduleService/CreateSlot"
+	ScheduleService_GetSlot_FullMethodName                    = "/schedule.ScheduleService/GetSlot"
+	ScheduleService_UpdateSlot_FullMethodName                 = "/schedule.ScheduleService/UpdateSlot"
+	ScheduleService_DeleteSlot_FullMethodName                 = "/schedule.ScheduleService/DeleteSlot"
+	ScheduleService_ListBusySlotsForUser_FullMethodName       = "/schedule.ScheduleService/ListBusySlotsForUser"
+	ScheduleService_ListAvailableSlotsForUser_FullMethodName  = "/schedule.ScheduleService/ListAvailableSlotsForUser"
+	ScheduleService_SaveSchedulePatternForUser_FullMethodName = "/schedule.ScheduleService/SaveSchedulePatternForUser"
+	ScheduleService_GetSchedulePatternsForUser_FullMethodName = "/schedule.ScheduleService/GetSchedulePatternsForUser"
 )
 
 // ScheduleServiceClient is the client API for ScheduleService service.
@@ -37,6 +39,8 @@ type ScheduleServiceClient interface {
 	DeleteSlot(ctx context.Context, in *SlotIdRequest, opts ...grpc.CallOption) (*Empty, error)
 	ListBusySlotsForUser(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*SlotListResponse, error)
 	ListAvailableSlotsForUser(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*SlotListResponse, error)
+	SaveSchedulePatternForUser(ctx context.Context, in *SaveSchedulePatternRequest, opts ...grpc.CallOption) (*SchedulePatternResponse, error)
+	GetSchedulePatternsForUser(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*SchedulePatternResponse, error)
 }
 
 type scheduleServiceClient struct {
@@ -107,6 +111,26 @@ func (c *scheduleServiceClient) ListAvailableSlotsForUser(ctx context.Context, i
 	return out, nil
 }
 
+func (c *scheduleServiceClient) SaveSchedulePatternForUser(ctx context.Context, in *SaveSchedulePatternRequest, opts ...grpc.CallOption) (*SchedulePatternResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SchedulePatternResponse)
+	err := c.cc.Invoke(ctx, ScheduleService_SaveSchedulePatternForUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *scheduleServiceClient) GetSchedulePatternsForUser(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*SchedulePatternResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SchedulePatternResponse)
+	err := c.cc.Invoke(ctx, ScheduleService_GetSchedulePatternsForUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ScheduleServiceServer is the server API for ScheduleService service.
 // All implementations must embed UnimplementedScheduleServiceServer
 // for forward compatibility.
@@ -117,6 +141,8 @@ type ScheduleServiceServer interface {
 	DeleteSlot(context.Context, *SlotIdRequest) (*Empty, error)
 	ListBusySlotsForUser(context.Context, *UserIdRequest) (*SlotListResponse, error)
 	ListAvailableSlotsForUser(context.Context, *UserIdRequest) (*SlotListResponse, error)
+	SaveSchedulePatternForUser(context.Context, *SaveSchedulePatternRequest) (*SchedulePatternResponse, error)
+	GetSchedulePatternsForUser(context.Context, *UserIdRequest) (*SchedulePatternResponse, error)
 	mustEmbedUnimplementedScheduleServiceServer()
 }
 
@@ -144,6 +170,12 @@ func (UnimplementedScheduleServiceServer) ListBusySlotsForUser(context.Context, 
 }
 func (UnimplementedScheduleServiceServer) ListAvailableSlotsForUser(context.Context, *UserIdRequest) (*SlotListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListAvailableSlotsForUser not implemented")
+}
+func (UnimplementedScheduleServiceServer) SaveSchedulePatternForUser(context.Context, *SaveSchedulePatternRequest) (*SchedulePatternResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SaveSchedulePatternForUser not implemented")
+}
+func (UnimplementedScheduleServiceServer) GetSchedulePatternsForUser(context.Context, *UserIdRequest) (*SchedulePatternResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSchedulePatternsForUser not implemented")
 }
 func (UnimplementedScheduleServiceServer) mustEmbedUnimplementedScheduleServiceServer() {}
 func (UnimplementedScheduleServiceServer) testEmbeddedByValue()                         {}
@@ -274,6 +306,42 @@ func _ScheduleService_ListAvailableSlotsForUser_Handler(srv interface{}, ctx con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ScheduleService_SaveSchedulePatternForUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SaveSchedulePatternRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScheduleServiceServer).SaveSchedulePatternForUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ScheduleService_SaveSchedulePatternForUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScheduleServiceServer).SaveSchedulePatternForUser(ctx, req.(*SaveSchedulePatternRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ScheduleService_GetSchedulePatternsForUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScheduleServiceServer).GetSchedulePatternsForUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ScheduleService_GetSchedulePatternsForUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScheduleServiceServer).GetSchedulePatternsForUser(ctx, req.(*UserIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ScheduleService_ServiceDesc is the grpc.ServiceDesc for ScheduleService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -305,7 +373,15 @@ var ScheduleService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "ListAvailableSlotsForUser",
 			Handler:    _ScheduleService_ListAvailableSlotsForUser_Handler,
 		},
+		{
+			MethodName: "SaveSchedulePatternForUser",
+			Handler:    _ScheduleService_SaveSchedulePatternForUser_Handler,
+		},
+		{
+			MethodName: "GetSchedulePatternsForUser",
+			Handler:    _ScheduleService_GetSchedulePatternsForUser_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "schedule_service.proto",
+	Metadata: "protos/schedule_service.proto",
 }

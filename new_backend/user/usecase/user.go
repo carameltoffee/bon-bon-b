@@ -2,8 +2,11 @@ package usecase
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"time"
 	"user/models"
+	"user/pkg/helper"
 
 	"go.uber.org/zap"
 )
@@ -111,5 +114,35 @@ func (uc *UserUsecase) Login(ctx context.Context, ip, login, password string) (s
 		uc.logger.Warn("login failed: can't generate token", zap.Error(err))
 		return "", fmt.Errorf("%w: %v", ErrGenerateToken, err)
 	}
+
+	go uc.publishLoginEvent(ctx, user)
+
 	return token, nil
+}
+
+func (uc *UserUsecase) publishLoginEvent(ctx context.Context, user *models.User) error {
+	notification := struct {
+		Time  time.Time `json:"when_logged"`
+		Name  string    `json:"name"`
+		Email string    `json:"email"`
+	}{
+		Time:  time.Now(),
+		Name:  user.Name,
+		Email: user.Email,
+	}
+
+	return helper.Retry(ctx, 3, 100*time.Millisecond, func() error {
+		body, err := json.Marshal(notification)
+		if err != nil {
+			uc.logger.Error("failed to marshal user.logged payload", zap.Error(err))
+			return err
+		}
+		err = uc.rmq.Publish(ctx, "user", "user.logged", body)
+		if err != nil {
+			uc.logger.Error("can't send message to rmq", zap.String("reason", err.Error()))
+			return fmt.Errorf("%w: %v", ErrCannotSendToRMQ, err)
+		}
+		uc.logger.Info("message sent to rabbitmq!")
+		return nil
+	})
 }

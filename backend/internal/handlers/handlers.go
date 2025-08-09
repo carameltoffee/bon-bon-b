@@ -64,16 +64,17 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			auth.POST("users/works", h.UploadMasterWork)
 			auth.POST("/users/avatar", h.UploadAvatar)
 			auth.DELETE("masters/works/:id", h.DeleteMasterWork)
-			auth.GET("/appointments", h.GetAppointments)
-			auth.POST("/appointments", h.CreateAppointment)
-			auth.DELETE("/appointments/:id", h.DeleteAppointment)
+			
+			auth.GET("/schedule", h.GetSchedule)
 
-			auth.PUT("/schedule/dayoff", h.SetDayOff)
+			auth.POST("/appointments", h.MakeAnAppointment)
+			auth.PUT("/appointments/hours/weekday", h.SetWorkingSlotsByWeekDay)
+			auth.PUT("/appointments/hours/date", h.SetWorkingSlotsByDate)
 
-			auth.PUT("/schedule/hours/weekday", h.SetWorkingSlotsByWeekDay)
+			auth.POST("/deadlines", h.MakeADeadlineTask)
+			auth.POST("/asap", h.MakeATask)
 
-			auth.PUT("/schedule/hours/date", h.SetWorkingSlotsByDate)
-			auth.DELETE("/schedule/hours/date", h.DeleteWorkingSlotsByDate)
+			auth.POST("users/:id/tasks/:taskId/accept", h.AcceptTask)
 		}
 	}
 	return r

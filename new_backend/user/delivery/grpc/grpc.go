@@ -39,6 +39,7 @@ func (s *server) CreateUser(ctx context.Context, in *bb.CreateUserRequest) (*bb.
 		Specialization: in.GetSpecialization(),
 		Email:          in.GetEmail(),
 		Password:       in.GetPassword(),
+		Role:           "user",
 	}
 
 	err := s.uc.CreateUser(ctx, user)

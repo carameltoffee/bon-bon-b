@@ -23,11 +23,15 @@ type Service struct {
 }
 
 type Schedules interface {
-	SetDayOff(ctx context.Context, userId int64, date string, isDayOff bool) error
 	SetWorkingSlotsByWeekDay(ctx context.Context, userId int64, dayOfWeek string, slots []string) error
 	SetWorkingSlotsByDate(ctx context.Context, userId int64, date string, slots []string) error
 	DeleteWorkingSlotsByDate(ctx context.Context, userId int64, date string) error
-	GetSchedule(ctx context.Context, date string, userId int64) (*models.TodaySchedule, error)
+
+	GetSchedule(ctx context.Context, date string, userId int64) (any, error)
+
+	SetDeadline(ctx context.Context, userId int64, task *models.TaskWithDeadline) error
+	SetAsSoonAsPossible(ctx context.Context, userId int64, task *models.Task) error
+	AcceptTask(ctx context.Context, userId, taskId int64) error
 }
 
 type Users interface {

@@ -33,12 +33,24 @@ type Reviews interface {
 }
 
 type Schedules interface {
-	SetDayOff(ctx context.Context, userID int64, date time.Time, isDayOff bool) error
-	SetWorkingSlotsByWeekDay(ctx context.Context, userId int64, dayOfWeek string, slots []string) error
-	SetWorkingSlotsByDate(ctx context.Context, userId int64, date time.Time, slots []string) error
-	DeleteWorkingSlotsByDate(ctx context.Context, userId int64, date time.Time) error
-	GetDaysOff(ctx context.Context, userId int64) ([]time.Time, error)
-	GetSlotsByDay(ctx context.Context, userId int64, date time.Time, dayOfWeek string) ([]time.Time, error)
+	CreateSlotSchedule(ctx context.Context, userId int64) error
+	GetSlotSchedule(ctx context.Context, userId int64, date string) (*models.ScheduleForDate, error)
+	AddSlotByWeekday(ctx context.Context, userId int64, dayOfWeek string, slots []string) error
+	AddSlotByDate(ctx context.Context, userId int64, date time.Time, slots []string) error
+	DeleteSlotByDate(ctx context.Context, userId int64, date time.Time) error
+	SetDayStatus(ctx context.Context, userId int64, date time.Time, isDayOff bool) error
+
+	CreateDeadlineSchedule(ctx context.Context, userId int64) error
+	GetDeadlineSchedule(ctx context.Context, userId int64) ([]models.TaskWithDeadline, error)
+	AddTaskToDeadlineSchedule(ctx context.Context, userId int64, task *models.TaskWithDeadline) error
+	AcceptTaskDeadline(ctx context.Context, taskId int64) error
+
+	CreateASAPSchedule(ctx context.Context, userId int64) error
+	GetASAPSchedule(ctx context.Context, userId int64) ([]models.Task, error)
+	AddTaskToASAPSchedule(ctx context.Context, userId int64, task *models.Task) error
+	AcceptTaskASAP(ctx context.Context, taskId int64) error
+
+	ChangeScheduleType(ctx context.Context, userId int64, _type string) error
 }
 
 type Users interface {

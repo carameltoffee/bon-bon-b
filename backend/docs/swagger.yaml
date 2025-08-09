@@ -38,6 +38,26 @@ definitions:
       token:
         type: string
     type: object
+  handlers.MakeADeadlineTaskReq:
+    properties:
+      deadline:
+        type: string
+      desc:
+        type: string
+      master_id:
+        type: integer
+      name:
+        type: string
+    type: object
+  handlers.MakeATaskReq:
+    properties:
+      desc:
+        type: string
+      master_id:
+        type: integer
+      name:
+        type: string
+    type: object
   handlers.RegisterReq:
     properties:
       code:
@@ -153,21 +173,6 @@ definitions:
       user_id:
         type: integer
     type: object
-  models.TodaySchedule:
-    properties:
-      appointments:
-        items:
-          type: string
-        type: array
-      days_off:
-        items:
-          type: string
-        type: array
-      slots:
-        items:
-          type: string
-        type: array
-    type: object
   models.User:
     properties:
       average_rating:
@@ -179,6 +184,8 @@ definitions:
       id:
         type: integer
       registered_at:
+        type: string
+      schedule_type:
         type: string
       specialization:
         type: string
@@ -309,6 +316,132 @@ paths:
       summary: Delete an appointment
       tags:
       - appointments
+  /appointments/hours/date:
+    put:
+      consumes:
+      - application/json
+      description: Set available time slots for a given date (master only).
+      parameters:
+      - description: working slots info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.SetWorkingSlotsReq'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "400":
+          description: Invalid input or bad date
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Set working slots
+      tags:
+      - schedule
+  /appointments/hours/weekday:
+    put:
+      consumes:
+      - application/json
+      description: Update exact time slots for a day of week
+      parameters:
+      - description: Working slots input
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.setWorkingSlotsInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Set working slots for master
+      tags:
+      - schedule
+  /asap:
+    post:
+      consumes:
+      - application/json
+      description: Create a new task to be completed as soon as possible
+      parameters:
+      - description: Task creation data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.MakeATaskReq'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Task created successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Create an ASAP task
+      tags:
+      - tasks
+  /deadlines:
+    post:
+      consumes:
+      - application/json
+      description: Create a new task with a deadline
+      parameters:
+      - description: Task creation data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.MakeADeadlineTaskReq'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Task created successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Create a deadline task
+      tags:
+      - tasks
   /login:
     post:
       consumes:
@@ -699,8 +832,7 @@ paths:
       responses:
         "200":
           description: Today's schedule
-          schema:
-            $ref: '#/definitions/models.TodaySchedule'
+          schema: {}
         "401":
           description: Unauthorized
           schema:
@@ -746,104 +878,6 @@ paths:
       security:
       - BearerAuth: []
       summary: Set day off for master
-      tags:
-      - schedule
-  /schedule/hours/date:
-    delete:
-      description: Delete all working slots for a given date (master only).
-      parameters:
-      - description: Date in YYYY-MM-DD format
-        in: query
-        name: date
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "204":
-          description: No Content
-          schema:
-            type: string
-        "400":
-          description: Missing or invalid date
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Delete working slots
-      tags:
-      - schedule
-    put:
-      consumes:
-      - application/json
-      description: Set available time slots for a given date (master only).
-      parameters:
-      - description: working slots info
-        in: body
-        name: input
-        required: true
-        schema:
-          $ref: '#/definitions/handlers.SetWorkingSlotsReq'
-      produces:
-      - application/json
-      responses:
-        "204":
-          description: No Content
-          schema:
-            type: string
-        "400":
-          description: Invalid input or bad date
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Set working slots
-      tags:
-      - schedule
-  /schedule/hours/weekday:
-    put:
-      consumes:
-      - application/json
-      description: Update exact time slots for a day of week
-      parameters:
-      - description: Working slots input
-        in: body
-        name: input
-        required: true
-        schema:
-          $ref: '#/definitions/handlers.setWorkingSlotsInput'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Set working slots for master
       tags:
       - schedule
   /search:
@@ -967,6 +1001,40 @@ paths:
       summary: Get user's avatar
       tags:
       - avatar
+  /users/{id}/tasks/{taskId}/accept:
+    post:
+      consumes:
+      - application/json
+      description: Accept an existing task
+      parameters:
+      - description: Task ID
+        in: path
+        name: taskId
+        required: true
+        type: integer
+      - description: User ID
+        in: path
+        name: userId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Task accepted successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid parameters
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Accept a task
+      tags:
+      - tasks
   /users/{id}/works:
     get:
       description: Returns list of work IDs uploaded by the master

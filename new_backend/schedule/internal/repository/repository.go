@@ -19,6 +19,10 @@ type Schedule interface {
 
 	ListBusySlotsForUser(ctx context.Context, userID int64) ([]models.Slot, error)
 	ListAvailableSlotsForUser(ctx context.Context, userID int64) ([]models.Slot, error)
+
+	SaveSchedulePatternForUser(ctx context.Context, pattern *models.SchedulePattern) (*models.SchedulePattern, error)
+	GetSchedulePatternsForUser(ctx context.Context, userId int64) (*models.SchedulePattern, error)
+	MarkAsGenerated(ctx context.Context, userId int64) error
 }
 
 func NewScheduleRepository(conn *pgxpool.Pool) Schedule {

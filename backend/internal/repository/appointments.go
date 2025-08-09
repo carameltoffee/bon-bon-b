@@ -60,7 +60,12 @@ func (r *postgresAppointmentsRepository) isMasterUnavailable(ctx context.Context
 		return true, nil
 	}
 
-	const dateSlotExistQuery = `SELECT COUNT(*) FROM date_slots WHERE user_id = $1 AND date = $2`
+	const dateSlotExistQuery = `
+		SELECT COUNT(*) 
+		FROM date_slots ds
+		JOIN schedules s ON ds.schedule_id = s.id
+		WHERE s.user_id = $1 AND ds.date = $2`
+
 	dateSlotCount, err := r.countQuery(ctx, dateSlotExistQuery, masterID, date)
 	if err != nil {
 		return false, err
@@ -68,11 +73,20 @@ func (r *postgresAppointmentsRepository) isMasterUnavailable(ctx context.Context
 
 	var slotQuery string
 	var args []interface{}
+
 	if dateSlotCount > 0 {
-		slotQuery = `SELECT COUNT(*) FROM date_slots WHERE user_id = $1 AND date = $2 AND slot = $3`
+		slotQuery = `
+			SELECT COUNT(*) 
+			FROM date_slots ds
+			JOIN schedules s ON ds.schedule_id = s.id
+			WHERE s.user_id = $1 AND ds.date = $2 AND ds.slot = $3`
 		args = []interface{}{masterID, date, timeOfDay}
 	} else {
-		slotQuery = `SELECT COUNT(*) FROM schedule_slots WHERE user_id = $1 AND day_of_week = $2 AND slot = $3`
+		slotQuery = `
+			SELECT COUNT(*) 
+			FROM schedule_slots ss
+			JOIN schedules s ON ss.schedule_id = s.id
+			WHERE s.user_id = $1 AND ss.day_of_week = $2 AND ss.slot = $3`
 		args = []interface{}{masterID, dayOfWeek, timeOfDay}
 	}
 

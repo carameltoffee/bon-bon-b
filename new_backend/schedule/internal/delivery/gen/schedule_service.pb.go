@@ -2,16 +2,17 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v3.21.12
-// source: schedule_service.proto
+// source: protos/schedule_service.proto
 
 package schedule
 
 import (
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -33,7 +34,7 @@ type Slot struct {
 
 func (x *Slot) Reset() {
 	*x = Slot{}
-	mi := &file_schedule_service_proto_msgTypes[0]
+	mi := &file_protos_schedule_service_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -45,7 +46,7 @@ func (x *Slot) String() string {
 func (*Slot) ProtoMessage() {}
 
 func (x *Slot) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_service_proto_msgTypes[0]
+	mi := &file_protos_schedule_service_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -58,7 +59,7 @@ func (x *Slot) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Slot.ProtoReflect.Descriptor instead.
 func (*Slot) Descriptor() ([]byte, []int) {
-	return file_schedule_service_proto_rawDescGZIP(), []int{0}
+	return file_protos_schedule_service_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Slot) GetId() int64 {
@@ -99,7 +100,7 @@ type CreateSlotRequest struct {
 
 func (x *CreateSlotRequest) Reset() {
 	*x = CreateSlotRequest{}
-	mi := &file_schedule_service_proto_msgTypes[1]
+	mi := &file_protos_schedule_service_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -111,7 +112,7 @@ func (x *CreateSlotRequest) String() string {
 func (*CreateSlotRequest) ProtoMessage() {}
 
 func (x *CreateSlotRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_service_proto_msgTypes[1]
+	mi := &file_protos_schedule_service_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -124,7 +125,7 @@ func (x *CreateSlotRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateSlotRequest.ProtoReflect.Descriptor instead.
 func (*CreateSlotRequest) Descriptor() ([]byte, []int) {
-	return file_schedule_service_proto_rawDescGZIP(), []int{1}
+	return file_protos_schedule_service_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *CreateSlotRequest) GetUserId() int64 {
@@ -150,7 +151,7 @@ type UserIdRequest struct {
 
 func (x *UserIdRequest) Reset() {
 	*x = UserIdRequest{}
-	mi := &file_schedule_service_proto_msgTypes[2]
+	mi := &file_protos_schedule_service_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -162,7 +163,7 @@ func (x *UserIdRequest) String() string {
 func (*UserIdRequest) ProtoMessage() {}
 
 func (x *UserIdRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_service_proto_msgTypes[2]
+	mi := &file_protos_schedule_service_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -175,7 +176,7 @@ func (x *UserIdRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserIdRequest.ProtoReflect.Descriptor instead.
 func (*UserIdRequest) Descriptor() ([]byte, []int) {
-	return file_schedule_service_proto_rawDescGZIP(), []int{2}
+	return file_protos_schedule_service_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *UserIdRequest) GetUserId() int64 {
@@ -195,7 +196,7 @@ type UpdateSlotRequest struct {
 
 func (x *UpdateSlotRequest) Reset() {
 	*x = UpdateSlotRequest{}
-	mi := &file_schedule_service_proto_msgTypes[3]
+	mi := &file_protos_schedule_service_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -207,7 +208,7 @@ func (x *UpdateSlotRequest) String() string {
 func (*UpdateSlotRequest) ProtoMessage() {}
 
 func (x *UpdateSlotRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_service_proto_msgTypes[3]
+	mi := &file_protos_schedule_service_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -220,7 +221,7 @@ func (x *UpdateSlotRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateSlotRequest.ProtoReflect.Descriptor instead.
 func (*UpdateSlotRequest) Descriptor() ([]byte, []int) {
-	return file_schedule_service_proto_rawDescGZIP(), []int{3}
+	return file_protos_schedule_service_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *UpdateSlotRequest) GetId() int64 {
@@ -246,7 +247,7 @@ type SlotIdRequest struct {
 
 func (x *SlotIdRequest) Reset() {
 	*x = SlotIdRequest{}
-	mi := &file_schedule_service_proto_msgTypes[4]
+	mi := &file_protos_schedule_service_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -258,7 +259,7 @@ func (x *SlotIdRequest) String() string {
 func (*SlotIdRequest) ProtoMessage() {}
 
 func (x *SlotIdRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_service_proto_msgTypes[4]
+	mi := &file_protos_schedule_service_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -271,7 +272,7 @@ func (x *SlotIdRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SlotIdRequest.ProtoReflect.Descriptor instead.
 func (*SlotIdRequest) Descriptor() ([]byte, []int) {
-	return file_schedule_service_proto_rawDescGZIP(), []int{4}
+	return file_protos_schedule_service_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *SlotIdRequest) GetId() int64 {
@@ -290,7 +291,7 @@ type SlotResponse struct {
 
 func (x *SlotResponse) Reset() {
 	*x = SlotResponse{}
-	mi := &file_schedule_service_proto_msgTypes[5]
+	mi := &file_protos_schedule_service_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -302,7 +303,7 @@ func (x *SlotResponse) String() string {
 func (*SlotResponse) ProtoMessage() {}
 
 func (x *SlotResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_service_proto_msgTypes[5]
+	mi := &file_protos_schedule_service_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -315,7 +316,7 @@ func (x *SlotResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SlotResponse.ProtoReflect.Descriptor instead.
 func (*SlotResponse) Descriptor() ([]byte, []int) {
-	return file_schedule_service_proto_rawDescGZIP(), []int{5}
+	return file_protos_schedule_service_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *SlotResponse) GetSlot() *Slot {
@@ -334,7 +335,7 @@ type SlotListResponse struct {
 
 func (x *SlotListResponse) Reset() {
 	*x = SlotListResponse{}
-	mi := &file_schedule_service_proto_msgTypes[6]
+	mi := &file_protos_schedule_service_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -346,7 +347,7 @@ func (x *SlotListResponse) String() string {
 func (*SlotListResponse) ProtoMessage() {}
 
 func (x *SlotListResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_service_proto_msgTypes[6]
+	mi := &file_protos_schedule_service_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -359,7 +360,7 @@ func (x *SlotListResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SlotListResponse.ProtoReflect.Descriptor instead.
 func (*SlotListResponse) Descriptor() ([]byte, []int) {
-	return file_schedule_service_proto_rawDescGZIP(), []int{6}
+	return file_protos_schedule_service_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *SlotListResponse) GetSlots() []*Slot {
@@ -377,7 +378,7 @@ type Empty struct {
 
 func (x *Empty) Reset() {
 	*x = Empty{}
-	mi := &file_schedule_service_proto_msgTypes[7]
+	mi := &file_protos_schedule_service_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -389,7 +390,7 @@ func (x *Empty) String() string {
 func (*Empty) ProtoMessage() {}
 
 func (x *Empty) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_service_proto_msgTypes[7]
+	mi := &file_protos_schedule_service_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -402,14 +403,222 @@ func (x *Empty) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Empty.ProtoReflect.Descriptor instead.
 func (*Empty) Descriptor() ([]byte, []int) {
-	return file_schedule_service_proto_rawDescGZIP(), []int{7}
+	return file_protos_schedule_service_proto_rawDescGZIP(), []int{7}
 }
 
-var File_schedule_service_proto protoreflect.FileDescriptor
+type SlotPattern struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Weekday       string                 `protobuf:"bytes,1,opt,name=weekday,proto3" json:"weekday,omitempty"`
+	Time          string                 `protobuf:"bytes,2,opt,name=time,proto3" json:"time,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
 
-const file_schedule_service_proto_rawDesc = "" +
+func (x *SlotPattern) Reset() {
+	*x = SlotPattern{}
+	mi := &file_protos_schedule_service_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SlotPattern) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SlotPattern) ProtoMessage() {}
+
+func (x *SlotPattern) ProtoReflect() protoreflect.Message {
+	mi := &file_protos_schedule_service_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SlotPattern.ProtoReflect.Descriptor instead.
+func (*SlotPattern) Descriptor() ([]byte, []int) {
+	return file_protos_schedule_service_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *SlotPattern) GetWeekday() string {
+	if x != nil {
+		return x.Weekday
+	}
+	return ""
+}
+
+func (x *SlotPattern) GetTime() string {
+	if x != nil {
+		return x.Time
+	}
+	return ""
+}
+
+type SchedulePattern struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	ScheduleType  string                 `protobuf:"bytes,2,opt,name=schedule_type,json=scheduleType,proto3" json:"schedule_type,omitempty"`
+	TimeSlots     []*SlotPattern         `protobuf:"bytes,3,rep,name=time_slots,json=timeSlots,proto3" json:"time_slots,omitempty"`
+	DaysAhead     int32                  `protobuf:"varint,4,opt,name=days_ahead,json=daysAhead,proto3" json:"days_ahead,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SchedulePattern) Reset() {
+	*x = SchedulePattern{}
+	mi := &file_protos_schedule_service_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SchedulePattern) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SchedulePattern) ProtoMessage() {}
+
+func (x *SchedulePattern) ProtoReflect() protoreflect.Message {
+	mi := &file_protos_schedule_service_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SchedulePattern.ProtoReflect.Descriptor instead.
+func (*SchedulePattern) Descriptor() ([]byte, []int) {
+	return file_protos_schedule_service_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *SchedulePattern) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *SchedulePattern) GetScheduleType() string {
+	if x != nil {
+		return x.ScheduleType
+	}
+	return ""
+}
+
+func (x *SchedulePattern) GetTimeSlots() []*SlotPattern {
+	if x != nil {
+		return x.TimeSlots
+	}
+	return nil
+}
+
+func (x *SchedulePattern) GetDaysAhead() int32 {
+	if x != nil {
+		return x.DaysAhead
+	}
+	return 0
+}
+
+type SaveSchedulePatternRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Pattern       *SchedulePattern       `protobuf:"bytes,1,opt,name=pattern,proto3" json:"pattern,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SaveSchedulePatternRequest) Reset() {
+	*x = SaveSchedulePatternRequest{}
+	mi := &file_protos_schedule_service_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SaveSchedulePatternRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SaveSchedulePatternRequest) ProtoMessage() {}
+
+func (x *SaveSchedulePatternRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_protos_schedule_service_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SaveSchedulePatternRequest.ProtoReflect.Descriptor instead.
+func (*SaveSchedulePatternRequest) Descriptor() ([]byte, []int) {
+	return file_protos_schedule_service_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *SaveSchedulePatternRequest) GetPattern() *SchedulePattern {
+	if x != nil {
+		return x.Pattern
+	}
+	return nil
+}
+
+type SchedulePatternResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Pattern       *SchedulePattern       `protobuf:"bytes,1,opt,name=pattern,proto3" json:"pattern,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SchedulePatternResponse) Reset() {
+	*x = SchedulePatternResponse{}
+	mi := &file_protos_schedule_service_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SchedulePatternResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SchedulePatternResponse) ProtoMessage() {}
+
+func (x *SchedulePatternResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_protos_schedule_service_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SchedulePatternResponse.ProtoReflect.Descriptor instead.
+func (*SchedulePatternResponse) Descriptor() ([]byte, []int) {
+	return file_protos_schedule_service_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *SchedulePatternResponse) GetPattern() *SchedulePattern {
+	if x != nil {
+		return x.Pattern
+	}
+	return nil
+}
+
+var File_protos_schedule_service_proto protoreflect.FileDescriptor
+
+const file_protos_schedule_service_proto_rawDesc = "" +
 	"\n" +
-	"\x16schedule_service.proto\x12\bschedule\"f\n" +
+	"\x1dprotos/schedule_service.proto\x12\bschedule\"f\n" +
 	"\x04Slot\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x03R\x06userId\x12\x12\n" +
@@ -429,7 +638,21 @@ const file_schedule_service_proto_rawDesc = "" +
 	"\x04slot\x18\x01 \x01(\v2\x0e.schedule.SlotR\x04slot\"8\n" +
 	"\x10SlotListResponse\x12$\n" +
 	"\x05slots\x18\x01 \x03(\v2\x0e.schedule.SlotR\x05slots\"\a\n" +
-	"\x05Empty2\xaa\x03\n" +
+	"\x05Empty\";\n" +
+	"\vSlotPattern\x12\x18\n" +
+	"\aweekday\x18\x01 \x01(\tR\aweekday\x12\x12\n" +
+	"\x04time\x18\x02 \x01(\tR\x04time\"\xa4\x01\n" +
+	"\x0fSchedulePattern\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12#\n" +
+	"\rschedule_type\x18\x02 \x01(\tR\fscheduleType\x124\n" +
+	"\n" +
+	"time_slots\x18\x03 \x03(\v2\x15.schedule.SlotPatternR\ttimeSlots\x12\x1d\n" +
+	"\n" +
+	"days_ahead\x18\x04 \x01(\x05R\tdaysAhead\"Q\n" +
+	"\x1aSaveSchedulePatternRequest\x123\n" +
+	"\apattern\x18\x01 \x01(\v2\x19.schedule.SchedulePatternR\apattern\"N\n" +
+	"\x17SchedulePatternResponse\x123\n" +
+	"\apattern\x18\x01 \x01(\v2\x19.schedule.SchedulePatternR\apattern2\xeb\x04\n" +
 	"\x0fScheduleService\x12A\n" +
 	"\n" +
 	"CreateSlot\x12\x1b.schedule.CreateSlotRequest\x1a\x16.schedule.SlotResponse\x12:\n" +
@@ -439,73 +662,86 @@ const file_schedule_service_proto_rawDesc = "" +
 	"\n" +
 	"DeleteSlot\x12\x17.schedule.SlotIdRequest\x1a\x0f.schedule.Empty\x12K\n" +
 	"\x14ListBusySlotsForUser\x12\x17.schedule.UserIdRequest\x1a\x1a.schedule.SlotListResponse\x12P\n" +
-	"\x19ListAvailableSlotsForUser\x12\x17.schedule.UserIdRequest\x1a\x1a.schedule.SlotListResponseB\x05Z\x03/bbb\x06proto3"
+	"\x19ListAvailableSlotsForUser\x12\x17.schedule.UserIdRequest\x1a\x1a.schedule.SlotListResponse\x12e\n" +
+	"\x1aSaveSchedulePatternForUser\x12$.schedule.SaveSchedulePatternRequest\x1a!.schedule.SchedulePatternResponse\x12X\n" +
+	"\x1aGetSchedulePatternsForUser\x12\x17.schedule.UserIdRequest\x1a!.schedule.SchedulePatternResponseB\x05Z\x03/bbb\x06proto3"
 
 var (
-	file_schedule_service_proto_rawDescOnce sync.Once
-	file_schedule_service_proto_rawDescData []byte
+	file_protos_schedule_service_proto_rawDescOnce sync.Once
+	file_protos_schedule_service_proto_rawDescData []byte
 )
 
-func file_schedule_service_proto_rawDescGZIP() []byte {
-	file_schedule_service_proto_rawDescOnce.Do(func() {
-		file_schedule_service_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_schedule_service_proto_rawDesc), len(file_schedule_service_proto_rawDesc)))
+func file_protos_schedule_service_proto_rawDescGZIP() []byte {
+	file_protos_schedule_service_proto_rawDescOnce.Do(func() {
+		file_protos_schedule_service_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_protos_schedule_service_proto_rawDesc), len(file_protos_schedule_service_proto_rawDesc)))
 	})
-	return file_schedule_service_proto_rawDescData
+	return file_protos_schedule_service_proto_rawDescData
 }
 
-var file_schedule_service_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
-var file_schedule_service_proto_goTypes = []any{
-	(*Slot)(nil),              // 0: schedule.Slot
-	(*CreateSlotRequest)(nil), // 1: schedule.CreateSlotRequest
-	(*UserIdRequest)(nil),     // 2: schedule.UserIdRequest
-	(*UpdateSlotRequest)(nil), // 3: schedule.UpdateSlotRequest
-	(*SlotIdRequest)(nil),     // 4: schedule.SlotIdRequest
-	(*SlotResponse)(nil),      // 5: schedule.SlotResponse
-	(*SlotListResponse)(nil),  // 6: schedule.SlotListResponse
-	(*Empty)(nil),             // 7: schedule.Empty
+var file_protos_schedule_service_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_protos_schedule_service_proto_goTypes = []any{
+	(*Slot)(nil),                       // 0: schedule.Slot
+	(*CreateSlotRequest)(nil),          // 1: schedule.CreateSlotRequest
+	(*UserIdRequest)(nil),              // 2: schedule.UserIdRequest
+	(*UpdateSlotRequest)(nil),          // 3: schedule.UpdateSlotRequest
+	(*SlotIdRequest)(nil),              // 4: schedule.SlotIdRequest
+	(*SlotResponse)(nil),               // 5: schedule.SlotResponse
+	(*SlotListResponse)(nil),           // 6: schedule.SlotListResponse
+	(*Empty)(nil),                      // 7: schedule.Empty
+	(*SlotPattern)(nil),                // 8: schedule.SlotPattern
+	(*SchedulePattern)(nil),            // 9: schedule.SchedulePattern
+	(*SaveSchedulePatternRequest)(nil), // 10: schedule.SaveSchedulePatternRequest
+	(*SchedulePatternResponse)(nil),    // 11: schedule.SchedulePatternResponse
 }
-var file_schedule_service_proto_depIdxs = []int32{
-	0, // 0: schedule.SlotResponse.slot:type_name -> schedule.Slot
-	0, // 1: schedule.SlotListResponse.slots:type_name -> schedule.Slot
-	1, // 2: schedule.ScheduleService.CreateSlot:input_type -> schedule.CreateSlotRequest
-	4, // 3: schedule.ScheduleService.GetSlot:input_type -> schedule.SlotIdRequest
-	3, // 4: schedule.ScheduleService.UpdateSlot:input_type -> schedule.UpdateSlotRequest
-	4, // 5: schedule.ScheduleService.DeleteSlot:input_type -> schedule.SlotIdRequest
-	2, // 6: schedule.ScheduleService.ListBusySlotsForUser:input_type -> schedule.UserIdRequest
-	2, // 7: schedule.ScheduleService.ListAvailableSlotsForUser:input_type -> schedule.UserIdRequest
-	5, // 8: schedule.ScheduleService.CreateSlot:output_type -> schedule.SlotResponse
-	5, // 9: schedule.ScheduleService.GetSlot:output_type -> schedule.SlotResponse
-	5, // 10: schedule.ScheduleService.UpdateSlot:output_type -> schedule.SlotResponse
-	7, // 11: schedule.ScheduleService.DeleteSlot:output_type -> schedule.Empty
-	6, // 12: schedule.ScheduleService.ListBusySlotsForUser:output_type -> schedule.SlotListResponse
-	6, // 13: schedule.ScheduleService.ListAvailableSlotsForUser:output_type -> schedule.SlotListResponse
-	8, // [8:14] is the sub-list for method output_type
-	2, // [2:8] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+var file_protos_schedule_service_proto_depIdxs = []int32{
+	0,  // 0: schedule.SlotResponse.slot:type_name -> schedule.Slot
+	0,  // 1: schedule.SlotListResponse.slots:type_name -> schedule.Slot
+	8,  // 2: schedule.SchedulePattern.time_slots:type_name -> schedule.SlotPattern
+	9,  // 3: schedule.SaveSchedulePatternRequest.pattern:type_name -> schedule.SchedulePattern
+	9,  // 4: schedule.SchedulePatternResponse.pattern:type_name -> schedule.SchedulePattern
+	1,  // 5: schedule.ScheduleService.CreateSlot:input_type -> schedule.CreateSlotRequest
+	4,  // 6: schedule.ScheduleService.GetSlot:input_type -> schedule.SlotIdRequest
+	3,  // 7: schedule.ScheduleService.UpdateSlot:input_type -> schedule.UpdateSlotRequest
+	4,  // 8: schedule.ScheduleService.DeleteSlot:input_type -> schedule.SlotIdRequest
+	2,  // 9: schedule.ScheduleService.ListBusySlotsForUser:input_type -> schedule.UserIdRequest
+	2,  // 10: schedule.ScheduleService.ListAvailableSlotsForUser:input_type -> schedule.UserIdRequest
+	10, // 11: schedule.ScheduleService.SaveSchedulePatternForUser:input_type -> schedule.SaveSchedulePatternRequest
+	2,  // 12: schedule.ScheduleService.GetSchedulePatternsForUser:input_type -> schedule.UserIdRequest
+	5,  // 13: schedule.ScheduleService.CreateSlot:output_type -> schedule.SlotResponse
+	5,  // 14: schedule.ScheduleService.GetSlot:output_type -> schedule.SlotResponse
+	5,  // 15: schedule.ScheduleService.UpdateSlot:output_type -> schedule.SlotResponse
+	7,  // 16: schedule.ScheduleService.DeleteSlot:output_type -> schedule.Empty
+	6,  // 17: schedule.ScheduleService.ListBusySlotsForUser:output_type -> schedule.SlotListResponse
+	6,  // 18: schedule.ScheduleService.ListAvailableSlotsForUser:output_type -> schedule.SlotListResponse
+	11, // 19: schedule.ScheduleService.SaveSchedulePatternForUser:output_type -> schedule.SchedulePatternResponse
+	11, // 20: schedule.ScheduleService.GetSchedulePatternsForUser:output_type -> schedule.SchedulePatternResponse
+	13, // [13:21] is the sub-list for method output_type
+	5,  // [5:13] is the sub-list for method input_type
+	5,  // [5:5] is the sub-list for extension type_name
+	5,  // [5:5] is the sub-list for extension extendee
+	0,  // [0:5] is the sub-list for field type_name
 }
 
-func init() { file_schedule_service_proto_init() }
-func file_schedule_service_proto_init() {
-	if File_schedule_service_proto != nil {
+func init() { file_protos_schedule_service_proto_init() }
+func file_protos_schedule_service_proto_init() {
+	if File_protos_schedule_service_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_schedule_service_proto_rawDesc), len(file_schedule_service_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_protos_schedule_service_proto_rawDesc), len(file_protos_schedule_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_schedule_service_proto_goTypes,
-		DependencyIndexes: file_schedule_service_proto_depIdxs,
-		MessageInfos:      file_schedule_service_proto_msgTypes,
+		GoTypes:           file_protos_schedule_service_proto_goTypes,
+		DependencyIndexes: file_protos_schedule_service_proto_depIdxs,
+		MessageInfos:      file_protos_schedule_service_proto_msgTypes,
 	}.Build()
-	File_schedule_service_proto = out.File
-	file_schedule_service_proto_goTypes = nil
-	file_schedule_service_proto_depIdxs = nil
+	File_protos_schedule_service_proto = out.File
+	file_protos_schedule_service_proto_goTypes = nil
+	file_protos_schedule_service_proto_depIdxs = nil
 }

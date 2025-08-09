@@ -14,6 +14,9 @@ type Config struct {
 	DBUrl     string        `envconfig:"DB_URL" required:"true"`
 	JWTSecret string        `envconfig:"JWT_SECRET"`
 	TTL       time.Duration `envconfig:"TIME_DURATION"`
+	RabbitMq  struct {
+		Uri string `envconfig:"RABBITMQ_URL" default:"amqp://guest:guest@rabbitmq:5672/"`
+	}
 }
 
 func Load() *Config {

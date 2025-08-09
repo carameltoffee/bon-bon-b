@@ -7,190 +7,162 @@ import (
 	"strawberry/internal/models"
 	"strawberry/internal/repository"
 	"strawberry/pkg/logger"
-	"strings"
-	"time"
 
 	"go.uber.org/zap"
 )
 
 var (
-	ErrBadDate        = errors.New("bad date")
-	ErrNoWorkingSlots = errors.New("no working slots")
-	DateFormat        = "2006-01-02"
+	ErrWrongScheduleType = errors.New("method not allowed for user's schedule type")
 )
 
 type SchedulesService struct {
-	repo *repository.Repository
+	r         *repository.Repository
+	slotH     SlotHandler
+	deadlineH DeadlineHandler
+	asapH     AsapHandler
 }
 
 func newSchedulesService(r *repository.Repository) *SchedulesService {
-	return &SchedulesService{repo: r}
+	return &SchedulesService{
+		r:         r,
+		slotH:     NewSlotHandler(r),
+		deadlineH: NewDeadlineHandler(r),
+		asapH:     NewAsapHandler(r),
+	}
 }
 
-func (s *SchedulesService) SetDayOff(ctx context.Context, userId int64, dateStr string, isDayOff bool) error {
+func (s *SchedulesService) getUserScheduleType(ctx context.Context, userId int64) (string, error) {
 	ctx = logger.WithLogger(ctx)
 	l := logger.FromContext(ctx)
 
-	date, err := time.Parse(DateFormat, dateStr)
+	user, err := s.r.Users.GetById(ctx, userId)
 	if err != nil {
-		l.Error("invalid date format", zap.String("date", dateStr), zap.Error(err))
-		return fmt.Errorf("invalid date format: %w", err)
+		l.Warn("failed to get user for schedule type", zap.Error(err))
+		return "", fmt.Errorf("cannot get user: %w", err)
 	}
-
-	err = s.repo.SetDayOff(ctx, userId, date, isDayOff)
-	if err != nil {
-		l.Error("failed to set date day off", zap.Int64("userID", userId), zap.String("date", dateStr), zap.Bool("isDayOff", isDayOff), zap.Error(err))
-		return err
+	if user.ScheduleType == "" {
+		l.Warn("user has empty schedule type", zap.Int64("userId", userId))
+		return "", fmt.Errorf("user schedule type not set")
 	}
-
-	l.Info("date day off updated", zap.Int64("userID", userId), zap.String("date", dateStr), zap.Bool("isDayOff", isDayOff))
-	return nil
+	return user.ScheduleType, nil
 }
 
 func (s *SchedulesService) SetWorkingSlotsByWeekDay(ctx context.Context, userId int64, dayOfWeek string, slots []string) error {
 	ctx = logger.WithLogger(ctx)
 	l := logger.FromContext(ctx)
 
-	validDays := map[string]struct{}{
-		"monday": {}, "tuesday": {}, "wednesday": {}, "thursday": {},
-		"friday": {}, "saturday": {}, "sunday": {},
-	}
-	if _, ok := validDays[dayOfWeek]; !ok {
-		l.Error("validation failed")
-		return ValidationError{Msg: "not valid week day"}
-	}
-
-	for _, slot := range slots {
-		if _, err := time.Parse("15:04", slot); err != nil {
-			err = fmt.Errorf("invalid time slot format: %s", slot)
-			l.Error("validation failed", zap.String("slot", slot), zap.Error(err))
-			return ValidationError{Msg: err.Error()}
-		}
-	}
-
-	err := s.repo.SetWorkingSlotsByWeekDay(ctx, userId, dayOfWeek, slots)
+	t, err := s.getUserScheduleType(ctx, userId)
 	if err != nil {
-		l.Error("failed to set working slots", zap.Int64("userID", userId), zap.String("dayOfWeek", dayOfWeek), zap.Any("slots", slots), zap.Error(err))
 		return err
 	}
-
-	l.Info("working slots updated", zap.Int64("userID", userId), zap.String("dayOfWeek", dayOfWeek), zap.Any("slots", slots))
-	return nil
+	if t != "slot" {
+		l.Warn("attempt to set slots for non-slot schedule type", zap.Int64("userId", userId), zap.String("scheduleType", t))
+		return ErrWrongScheduleType
+	}
+	return s.slotH.SetWorkingSlotsByWeekDay(ctx, userId, dayOfWeek, slots)
 }
 
 func (s *SchedulesService) SetWorkingSlotsByDate(ctx context.Context, userId int64, date string, slots []string) error {
 	ctx = logger.WithLogger(ctx)
 	l := logger.FromContext(ctx)
 
-	dateFormatted, err := time.Parse(DateFormat, date)
+	t, err := s.getUserScheduleType(ctx, userId)
 	if err != nil {
-		l.Warn("invalid date format", zap.Error(err))
-		return ErrBadDate
+		return err
 	}
-
-	err = s.repo.Schedules.SetWorkingSlotsByDate(ctx, userId, dateFormatted, slots)
-	if err != nil {
-		l.Warn("can't set working slots", zap.Error(err))
-		return ErrInternal
+	if t != "slot" {
+		l.Warn("attempt to set slots by date for non-slot schedule type", zap.Int64("userId", userId), zap.String("scheduleType", t))
+		return ErrWrongScheduleType
 	}
-	return nil
+	return s.slotH.SetWorkingSlotsByDate(ctx, userId, date, slots)
 }
 
 func (s *SchedulesService) DeleteWorkingSlotsByDate(ctx context.Context, userId int64, date string) error {
 	ctx = logger.WithLogger(ctx)
 	l := logger.FromContext(ctx)
 
-	dateFormatted, err := time.Parse(DateFormat, date)
+	t, err := s.getUserScheduleType(ctx, userId)
 	if err != nil {
-		return ErrBadDate
+		return err
 	}
-
-	err = s.repo.Schedules.DeleteWorkingSlotsByDate(ctx, userId, dateFormatted)
-	if err != nil {
-		if errors.Is(err, repository.ErrNoWorkingSlots) {
-			l.Warn("can't delete working slot", zap.Error(err))
-			return ErrNoWorkingSlots
-		}
-		l.Error("can't delete working slot", zap.Error(err))
-		return ErrInternal
+	if t != "slot" {
+		l.Warn("attempt to delete slots by date for non-slot schedule type", zap.Int64("userId", userId), zap.String("scheduleType", t))
+		return ErrWrongScheduleType
 	}
-	return nil
+	return s.slotH.DeleteWorkingSlotsByDate(ctx, userId, date)
 }
 
-func (s *SchedulesService) GetSchedule(ctx context.Context, date string, userId int64) (*models.TodaySchedule, error) {
+func (s *SchedulesService) SetDeadline(ctx context.Context, userId int64, task *models.TaskWithDeadline) error {
 	ctx = logger.WithLogger(ctx)
 	l := logger.FromContext(ctx)
 
-	day, err := time.ParseInLocation(DateFormat, date, time.Local)
+	t, err := s.getUserScheduleType(ctx, userId)
 	if err != nil {
-		return nil, ErrBadDate
+		return err
 	}
-	dayOfWeek := strings.ToLower(day.Weekday().String())
+	if t != "deadline" {
+		l.Warn("attempt to set deadline for non-deadline schedule type", zap.Int64("userId", userId), zap.String("scheduleType", t))
+		return ErrWrongScheduleType
+	}
+	return s.deadlineH.SetDeadline(ctx, userId, task)
+}
 
-	l.Info("Getting days off",
-		zap.Int64("user_id", userId),
-	)
+func (s *SchedulesService) SetAsSoonAsPossible(ctx context.Context, userId int64, task *models.Task) error {
+	ctx = logger.WithLogger(ctx)
+	l := logger.FromContext(ctx)
 
-	offDates, err := s.repo.GetDaysOff(ctx, userId)
+	t, err := s.getUserScheduleType(ctx, userId)
 	if err != nil {
-		l.Error("Failed to get days off",
-			zap.Int64("user_id", userId),
-			zap.Error(err),
-		)
+		return err
+	}
+	if t != "asap" {
+		l.Warn("attempt to set asap for non-asap schedule type", zap.Int64("userId", userId), zap.String("scheduleType", t))
+		return ErrWrongScheduleType
+	}
+	return s.asapH.SetAsSoonAsPossible(ctx, userId, task)
+}
+
+func (s *SchedulesService) GetSchedule(ctx context.Context, date string, userId int64) (any, error) {
+	ctx = logger.WithLogger(ctx)
+	l := logger.FromContext(ctx)
+
+	t, err := s.getUserScheduleType(ctx, userId)
+	if err != nil {
 		return nil, err
 	}
-	var daysOff []string
-	for _, d := range offDates {
-		daysOff = append(daysOff, d.Format(DateFormat))
+
+	switch t {
+	case "slot":
+		return s.slotH.GetSchedule(ctx, date, userId)
+	case "deadline":
+		return s.deadlineH.GetSchedule(ctx, userId)
+	case "asap":
+		return s.asapH.GetSchedule(ctx, userId)
+	default:
+		l.Warn("unknown schedule type", zap.Int64("userId", userId), zap.String("scheduleType", t))
+		return nil, fmt.Errorf("unknown schedule type %s", t)
 	}
+}
 
-	l.Info("Getting slots by day",
-		zap.Int64("user_id", userId),
-		zap.String("day_of_week", dayOfWeek),
-	)
+func (s *SchedulesService) AcceptTask(ctx context.Context, userId, taskId int64) error {
+	ctx = logger.WithLogger(ctx)
+	l := logger.FromContext(ctx)
 
-	slots, err := s.repo.GetSlotsByDay(ctx, userId, day, dayOfWeek)
+	t, err := s.getUserScheduleType(ctx, userId)
 	if err != nil {
-		l.Error("Failed to get slots by day",
-			zap.Int64("user_id", userId),
-			zap.String("day_of_week", dayOfWeek),
-			zap.Error(err),
-		)
-		return nil, err
-	}
-	var slotStrs []string
-	for _, slot := range slots {
-		slotStrs = append(slotStrs, slot.Format("15:04"))
+		return err
 	}
 
-	l.Info("Getting appointments by date",
-		zap.Int64("user_id", userId),
-		zap.String("date", day.Format(DateFormat)),
-	)
-
-	appointments, err := s.repo.Appointments.GetByDate(ctx, userId, day)
-	if err != nil {
-		l.Error("Failed to get appointments by date",
-			zap.Int64("user_id", userId),
-			zap.String("date", day.Format(DateFormat)),
-			zap.Error(err),
-		)
+	switch t {
+	case "slot":
+		l.Warn("you can't accept task on slot schedule", zap.Int64("userId", userId), zap.String("scheduleType", t))
+		return fmt.Errorf("you can't accept task on slot schedule %s", t)
+	case "deadline":
+		return s.deadlineH.AcceptTask(ctx, taskId)
+	case "asap":
+		return s.asapH.AcceptTask(ctx, taskId)
+	default:
+		l.Warn("unknown schedule type", zap.Int64("userId", userId), zap.String("scheduleType", t))
+		return fmt.Errorf("unknown schedule type %s", t)
 	}
-	var appointmentStrs []string
-	for _, a := range appointments {
-		appointmentStrs = append(appointmentStrs, a.ScheduledAt.Format("15:04"))
-	}
-
-	l.Info("Successfully fetched today's schedule",
-		zap.Int64("user_id", userId),
-		zap.Strings("days_off", daysOff),
-		zap.Strings("slots", slotStrs),
-		zap.Strings("appointments", appointmentStrs),
-	)
-
-	return &models.TodaySchedule{
-		DaysOff:      daysOff,
-		Slots:        slotStrs,
-		Appointments: appointmentStrs,
-	}, nil
 }

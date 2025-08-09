@@ -161,12 +161,21 @@ func (r *postgresUsersRepository) GetMastersBySpecialization(ctx context.Context
 
 func (r *postgresUsersRepository) GetById(ctx context.Context, id int64) (*models.User, error) {
 	row := r.db.QueryRow(ctx, `
-		SELECT id, full_name, username, email, registered_at, specialization, bio
+		SELECT id, full_name, username, email, registered_at, specialization, bio, default_schedule_type
 		FROM users WHERE id = $1;
 	`, id)
 
 	var u models.User
-	err := row.Scan(&u.Id, &u.FullName, &u.Username, &u.Email, &u.RegisteredAt, &u.Specialization, &u.Bio)
+	err := row.Scan(
+		&u.Id,
+		&u.FullName,
+		&u.Username,
+		&u.Email,
+		&u.RegisteredAt,
+		&u.Specialization,
+		&u.Bio,
+		&u.ScheduleType,
+	)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, ErrNoUsers
 	}
@@ -175,7 +184,6 @@ func (r *postgresUsersRepository) GetById(ctx context.Context, id int64) (*model
 	}
 	return &u, nil
 }
-
 func (r *postgresUsersRepository) SearchUsers(ctx context.Context, query string) ([]models.User, error) {
 	sqlQuery := `
         SELECT id, full_name, email, username, password, registered_at, specialization, bio

@@ -2,10 +2,13 @@ package handlers
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
+	"strawberry/internal/models"
 	"strawberry/internal/service"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -46,7 +49,7 @@ func (h *Handler) SetDayOff(c *gin.Context) {
 		return
 	}
 
-	err := h.s.Schedules.SetDayOff(c.Request.Context(), claims.Id, input.Date, input.IsDayOff)
+	err := h.s.Schedules.SetWorkingSlotsByDate(c.Request.Context(), claims.Id, input.Date, []string{})
 	if err != nil {
 		newErrorResponse(http.StatusInternalServerError, "can't set days off", c)
 		return
@@ -67,7 +70,7 @@ func (h *Handler) SetDayOff(c *gin.Context) {
 // @Failure      400  {object} ErrorResponse
 // @Failure      401  {object} ErrorResponse
 // @Failure      500  {object} ErrorResponse
-// @Router       /schedule/hours/weekday [put]
+// @Router       /appointments/hours/weekday [put]
 func (h *Handler) SetWorkingSlotsByWeekDay(c *gin.Context) {
 	claims, ok := getClaims(c)
 	if !ok {
@@ -108,7 +111,7 @@ func (h *Handler) SetWorkingSlotsByWeekDay(c *gin.Context) {
 // @Tags         schedule
 // @Security     BearerAuth
 // @Produce      json
-// @Success      200  {object} models.TodaySchedule  "Today's schedule"
+// @Success      200  {object} any  "Today's schedule"
 // @Failure      401  {object} ErrorResponse
 // @Failure      500  {object} ErrorResponse
 // @Router       /schedule/{id} [get]
@@ -147,7 +150,7 @@ type SetWorkingSlotsReq struct {
 // @Success 204 {string} string "No Content"
 // @Failure 400 {object} ErrorResponse "Invalid input or bad date"
 // @Failure 500 {object} ErrorResponse "Internal server error"
-// @Router /schedule/hours/date [put]
+// @Router /appointments/hours/date [put]
 func (h *Handler) SetWorkingSlotsByDate(c *gin.Context) {
 	ctx := c.Request.Context()
 	var input *SetWorkingSlotsReq
@@ -176,18 +179,7 @@ func (h *Handler) SetWorkingSlotsByDate(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
-// DeleteWorkingSlotsByDate deletes all working slots for the authenticated master on a specific date.
-// @Summary Delete working slots
-// @Description Delete all working slots for a given date (master only).
-// @Tags schedule
-// @Produce json
-// @Param date query string true "Date in YYYY-MM-DD format"
-// @Security     BearerAuth
-// @Success 204 {string} string "No Content"
-// @Failure 400 {object} ErrorResponse "Missing or invalid date"
-// @Failure 401 {object} ErrorResponse "Unauthorized"
-// @Failure 500 {object} ErrorResponse "Internal server error"
-// @Router /schedule/hours/date [delete]
+// Deprecated: just set new slots everytime.
 func (h *Handler) DeleteWorkingSlotsByDate(c *gin.Context) {
 	ctx := c.Request.Context()
 
@@ -211,4 +203,123 @@ func (h *Handler) DeleteWorkingSlotsByDate(c *gin.Context) {
 	}
 
 	c.Status(http.StatusNoContent)
+}
+
+func (h *Handler) MakeAnAppointment(c *gin.Context) {
+	// ctx := c.Request.Context()
+
+	// err := h.s.Schedules.
+}
+
+type MakeADeadlineTaskReq struct {
+	MasterId    int64     `json:"master_id"`
+	Name        string    `json:"name"`
+	Description string    `json:"desc"`
+	Deadline    time.Time `json:"deadline"`
+}
+
+// @Summary Create a deadline task
+// @Description Create a new task with a deadline
+// @Tags tasks
+// @Accept json
+// @Produce json
+// @Param input body MakeADeadlineTaskReq true "Task creation data"
+// @Success 201 {object} string "Task created successfully"
+// @Failure 400 {object} ErrorResponse "Invalid request body"
+// @Failure 500 {object} ErrorResponse "Internal server error"
+// @Router /deadlines [post]
+func (h *Handler) MakeADeadlineTask(c *gin.Context) {
+	ctx := c.Request.Context()
+
+	var task MakeADeadlineTaskReq
+	if err := c.ShouldBindJSON(&task); err != nil {
+		newErrorResponse(http.StatusBadRequest, "invalid body", c)
+		return
+	}
+
+	err := h.s.Schedules.SetDeadline(ctx, task.MasterId, &models.TaskWithDeadline{
+		Name:        task.Name,
+		Description: task.Description,
+	})
+	if err != nil {
+		newErrorResponse(http.StatusInternalServerError, err.Error(), c)
+		return
+	}
+	c.Status(http.StatusCreated)
+}
+
+type MakeATaskReq struct {
+	MasterId    int64  `json:"master_id"`
+	Name        string `json:"name"`
+	Description string `json:"desc"`
+}
+
+// @Summary Create an ASAP task
+// @Description Create a new task to be completed as soon as possible
+// @Tags tasks
+// @Accept json
+// @Produce json
+// @Param input body MakeATaskReq true "Task creation data"
+// @Success 201 {object} string "Task created successfully"
+// @Failure 400 {object} ErrorResponse "Invalid request body"
+// @Failure 500 {object} ErrorResponse "Internal server error"
+// @Router /asap [post]
+func (h *Handler) MakeATask(c *gin.Context) {
+	ctx := c.Request.Context()
+
+	var task MakeATaskReq
+	if err := c.ShouldBindJSON(&task); err != nil {
+		newErrorResponse(http.StatusBadRequest, "invalid body", c)
+		return
+	}
+
+	err := h.s.Schedules.SetAsSoonAsPossible(ctx, task.MasterId, &models.Task{
+		Name:        task.Name,
+		Description: task.Description,
+	})
+	if err != nil {
+		newErrorResponse(http.StatusInternalServerError, err.Error(), c)
+		return
+	}
+	c.Status(http.StatusCreated)
+}
+
+// @Summary Accept a task
+// @Description Accept an existing task
+// @Tags tasks
+// @Accept json
+// @Produce json
+// @Param taskId path int64 true "Task ID"
+// @Param userId path int64 true "User ID"
+// @Success 202 {object} string "Task accepted successfully"
+// @Failure 400 {object} ErrorResponse "Invalid parameters"
+// @Failure 500 {object} ErrorResponse "Internal server error"
+// @Router /users/{id}/tasks/{taskId}/accept [post]
+func (h *Handler) AcceptTask(c *gin.Context) {
+	ctx := c.Request.Context()
+
+	taskId, err := mustGetInt64Param("taskId", c)
+	if err != nil {
+		return
+	}
+	userId, err := mustGetInt64Param("id", c)
+	if err != nil {
+		return
+	}
+	err = h.s.Schedules.AcceptTask(ctx, userId, taskId)
+	if err != nil {
+		newErrorResponse(http.StatusInternalServerError, "can't accept task", c)
+		return
+	}
+	c.Status(http.StatusAccepted)
+}
+
+func mustGetInt64Param(key string, c *gin.Context) (int64, error) {
+	param := c.Param(key)
+	paramInt, err := strconv.ParseInt(param, 10, 64)
+	if err != nil {
+		newErrorResponse(http.StatusBadRequest, "must be a number", c)
+		return 0, fmt.Errorf("must be a num")
+	}
+	return paramInt, nil
 }

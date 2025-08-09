@@ -11,6 +11,8 @@ service ScheduleService {
      rpc DeleteSlot (SlotIdRequest) returns (Empty);
      rpc ListBusySlotsForUser (UserIdRequest) returns (SlotListResponse);
      rpc ListAvailableSlotsForUser (UserIdRequest) returns (SlotListResponse);
+     rpc SaveSchedulePatternForUser (SaveSchedulePatternRequest) returns (SchedulePatternResponse);
+     rpc GetSchedulePatternsForUser (UserIdRequest) returns (SchedulePatternResponse);
 }
 
 message Slot {
@@ -47,3 +49,23 @@ message SlotListResponse {
 }
 
 message Empty {}
+
+message SlotPattern {
+    string weekday = 1;
+    string time = 2;
+}
+
+message SchedulePattern {
+    int64 user_id = 1;
+    string schedule_type = 2;
+    repeated SlotPattern time_slots = 3;
+    int32 days_ahead = 4;
+}
+
+message SaveSchedulePatternRequest {
+    SchedulePattern pattern = 1;
+}
+
+message SchedulePatternResponse {
+    SchedulePattern pattern = 1;
+}

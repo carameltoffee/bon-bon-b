@@ -3,7 +3,10 @@ package repository
 import (
 	"context"
 	"errors"
+	"fmt"
 	"schedule/internal/models"
+	"schedule/pkg/dates"
+	"time"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -112,4 +115,124 @@ func (r *ScheduleRepository) listSlotsByAvailability(ctx context.Context, userID
 		slots = append(slots, slot)
 	}
 	return slots, nil
+}
+
+func (r *ScheduleRepository) SaveSchedulePatternForUser(ctx context.Context, pattern *models.SchedulePattern) (*models.SchedulePattern, error) {
+	tx, err := r.conn.BeginTx(ctx, pgx.TxOptions{})
+	if err != nil {
+		return nil, fmt.Errorf("begin tx: %w", err)
+	}
+	defer func() {
+		if err != nil {
+			_ = tx.Rollback(ctx)
+		} else {
+			_ = tx.Commit(ctx)
+		}
+	}()
+
+	_, err = tx.Exec(ctx, `
+		DELETE FROM schedule_patterns 
+		WHERE user_id = $1
+	`, pattern.UserId)
+	if err != nil {
+		return nil, fmt.Errorf("delete existing pattern: %w", err)
+	}
+
+	var patternID int64
+	err = tx.QueryRow(ctx, `
+		INSERT INTO schedule_patterns (user_id, days_ahead, schedule_type)
+		VALUES ($1, $2, $3)
+		RETURNING id
+	`, pattern.UserId, pattern.DaysAhead, pattern.Type).Scan(&patternID)
+	if err != nil {
+		return nil, fmt.Errorf("insert schedule_patterns: %w", err)
+	}
+
+	for _, slot := range pattern.Slots {
+		weekdayNum, convErr := dates.WeekdayToInt(slot.Weekday)
+		if convErr != nil {
+			return nil, fmt.Errorf("invalid weekday: %w", convErr)
+		}
+
+		_, err = tx.Exec(ctx, `
+			INSERT INTO schedule_pattern_time_ranges (pattern_id, weekday, time)
+			VALUES ($1, $2, $3)
+		`, patternID, weekdayNum, slot.Time)
+		if err != nil {
+			return nil, fmt.Errorf("insert slot: %w", err)
+		}
+	}
+
+	return pattern, nil
+}
+
+func (r *ScheduleRepository) GetSchedulePatternsForUser(ctx context.Context, userId int64) (*models.SchedulePattern, error) {
+	row := r.conn.QueryRow(ctx, `
+		SELECT id, days_ahead
+		FROM schedule_patterns
+		WHERE user_id = $1
+	`, userId)
+
+	var patternID int64
+	var daysAhead int
+	err := row.Scan(&patternID, &daysAhead)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, nil
+		}
+		return nil, fmt.Errorf("select pattern: %w", err)
+	}
+
+	rows, err := r.conn.Query(ctx, `
+		SELECT weekday, time
+		FROM schedule_pattern_time_ranges
+		WHERE pattern_id = $1
+	`, patternID)
+	if err != nil {
+		return nil, fmt.Errorf("select time ranges: %w", err)
+	}
+	defer rows.Close()
+
+	var slots []models.SlotPattern
+	for rows.Next() {
+		var weekday int
+		var timeVal string
+		if err := rows.Scan(&weekday, &timeVal); err != nil {
+			return nil, fmt.Errorf("scan slot: %w", err)
+		}
+		slots = append(slots, models.SlotPattern{
+			Weekday: dates.IntToWeekday(weekday),
+			Time:    timeVal,
+		})
+	}
+
+	return &models.SchedulePattern{
+		UserId:    userId,
+		DaysAhead: daysAhead,
+		Slots:     slots,
+	}, nil
+}
+
+func (r *ScheduleRepository) MarkAsGenerated(ctx context.Context, userId int64) error {
+	tx, err := r.conn.Begin(ctx)
+	if err != nil {
+		return ErrInternal
+	}
+	defer func() {
+		if err != nil {
+			tx.Rollback(ctx)
+		} else {
+			err = tx.Commit(ctx)
+		}
+	}()
+
+	query := `UPDATE schedule_patterns SET last_generated = $1 WHERE user_id = $2`
+	err = tx.QueryRow(ctx, query, time.Now(), userId).Scan()
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return ErrNotFound
+		}
+		return ErrInternal
+	}
+	return nil
 }

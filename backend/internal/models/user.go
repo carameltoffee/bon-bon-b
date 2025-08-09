@@ -17,6 +17,7 @@ type User struct {
 	RegisteredAt   time.Time `json:"registered_at"`
 	AverageRating  float64   `json:"average_rating"`
 	Specialization string    `json:"specialization"`
+	ScheduleType   string    `json:"schedule_type"`
 }
 
 func (u *User) Validate() error {

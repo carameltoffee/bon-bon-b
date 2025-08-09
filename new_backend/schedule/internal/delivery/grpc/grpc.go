@@ -80,6 +80,69 @@ func (s *server) ListAvailableSlotsForUser(ctx context.Context, req *schedule.Us
 	return &schedule.SlotListResponse{Slots: convertToPBList(slots)}, nil
 }
 
+func (s *server) SaveSchedulePatternForUser(
+	ctx context.Context,
+	req *schedule.SaveSchedulePatternRequest,
+) (*schedule.SchedulePatternResponse, error) {
+	domainPattern := convertToDomainPattern(req.Pattern)
+	saved, err := s.uc.SaveSchedulePatternForUser(ctx, domainPattern)
+	if err != nil {
+		return nil, err
+	}
+
+	return &schedule.SchedulePatternResponse{
+		Pattern: convertToPBPattern(saved),
+	}, nil
+}
+
+func (s *server) GetSchedulePatternsForUser(
+	ctx context.Context,
+	req *schedule.UserIdRequest,
+) (*schedule.SchedulePatternResponse, error) {
+	pattern, err := s.uc.GetSchedulePatternForUser(ctx, req.UserId)
+	if err != nil {
+		return nil, err
+	}
+
+	return &schedule.SchedulePatternResponse{
+		Pattern: convertToPBPattern(pattern),
+	}, nil
+}
+
+func convertToPBPattern(p *models.SchedulePattern) *schedule.SchedulePattern {
+	slots := make([]*schedule.SlotPattern, len(p.Slots))
+	for i, s := range p.Slots {
+		slots[i] = &schedule.SlotPattern{
+			Weekday: s.Weekday,
+			Time:    s.Time,
+		}
+	}
+
+	return &schedule.SchedulePattern{
+		UserId:       p.UserId,
+		ScheduleType: p.Type,
+		TimeSlots:    slots,
+		DaysAhead:    int32(p.DaysAhead),
+	}
+}
+
+func convertToDomainPattern(p *schedule.SchedulePattern) *models.SchedulePattern {
+	slots := make([]models.SlotPattern, len(p.TimeSlots))
+	for i, s := range p.TimeSlots {
+		slots[i] = models.SlotPattern{
+			Weekday: s.Weekday,
+			Time:    s.Time,
+		}
+	}
+
+	return &models.SchedulePattern{
+		UserId:    p.UserId,
+		Type:      p.ScheduleType,
+		Slots:     slots,
+		DaysAhead: int(p.DaysAhead),
+	}
+}
+
 func convertToPB(s *models.Slot) *schedule.Slot {
 	return &schedule.Slot{
 		Id:          s.ID,

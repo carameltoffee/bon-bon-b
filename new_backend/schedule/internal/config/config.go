@@ -11,6 +11,10 @@ type Config struct {
 	Port    int    `envconfig:"PORT" default:"8080"`
 	Debug   bool   `envconfig:"DEBUG" default:"false"`
 	DBUrl   string `envconfig:"DB_URL" required:"true"`
+	User    struct {
+		Host string `envconfig:"USER_HOST" default:"user"`
+		Port int    `envconfig:"USER_PORT"`
+	}
 }
 
 func Load() *Config {

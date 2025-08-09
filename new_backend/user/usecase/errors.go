@@ -13,4 +13,5 @@ var (
 	ErrGetUserByID        = errors.New("failed to get user by ID")
 	ErrFailedToFindUsers  = errors.New("failed to find users")
 	ErrValidationError    = errors.New("bad user")
+	ErrCannotSendToRMQ    = errors.New("couldn't send to rmq")
 )

@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/signal"
 	"schedule/internal/config"
+	schedule "schedule/internal/delivery/gen"
 	delivery "schedule/internal/delivery/grpc"
 	"schedule/internal/repository"
 	"schedule/internal/usecase"
@@ -16,6 +17,7 @@ import (
 
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 func main() {
@@ -37,9 +39,17 @@ func main() {
 	}
 	defer db.Close()
 
+	user_conn, err := connectWithMicroservice(cfg.User.Host, cfg.User.Port)
+	if err != nil {
+		log.Fatalf("connection error: %v", err)
+	}
+	defer user_conn.Close()
+
+	userClient := schedule.NewUserServiceClient(user_conn)
+
 	repo := repository.NewScheduleRepository(db)
 
-	uc := usecase.NewScheduleUsecase(repo, logger)
+	uc := usecase.NewScheduleUsecase(repo, logger, userClient)
 
 	delivery.NewScheduleServerGrpc(grpcServer, logger, uc)
 
@@ -63,4 +73,15 @@ func main() {
 
 	grpcServer.GracefulStop()
 	logger.Info("gRPC сервер остановлен корректно")
+}
+
+func connectWithMicroservice(host string, port int) (*grpc.ClientConn, error) {
+	conn, err := grpc.NewClient(
+		fmt.Sprintf("%s:%d", host, port),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to connect: %w", err)
+	}
+	return conn, nil
 }
